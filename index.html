@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>北海道紅葉狩</title>
+  <title>北海道紅葉狩 8天7夜深度遊</title>
 
   <!-- iOS Web App Capable Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -284,7 +284,7 @@
                       <i class="fa-solid fa-ticket"></i> 檢視預約
                     </button>
                   </template>
-                  <span class="card-sub text-slate-400 ml-auto font-medium" x-text="item.expanded ? '▲ 收起詳細' : '▼ 點擊檢視/編輯'"></span>
+                  <span class="card-sub text-slate-400 ml-auto font-medium" x-text="item.expanded ? '▲ 收起詳細' : '▼ 檢視'"></span>
                 </div>
 
                 <h3 class="font-bold card-title text-slate-800" x-text="item.title"></h3>
@@ -705,7 +705,7 @@
           let match = null;
           if (hotelName.includes('Granbell') || hotelName.includes('granbell') || hotelName.includes('狸小路')) {
             match = this.hotels.find(h => h.id === 'h4');
-          } else if (hotelName.includes('ESCON') || hotelName.includes('escon')) {
+          } else if (hotelName.includes('ESCON') || hotelName.includes('EsCON') || hotelName.includes('escon')) {
             match = this.hotels.find(h => h.id === 'h5');
           } else {
             match = this.hotels.find(h => hotelName.includes(h.nameZh) || h.nameZh.includes(hotelName));
@@ -905,7 +905,7 @@
             ]
           },
           {
-            dayNum: 5, date: '11/7 (週六)', dateShort: '11/07', title: '札幌金色銀杏大道與城市紅葉', mainTheme: '登別熊牧場體驗、螃蟹名店午餐、市區紅葉與銀杏巡禮、和牛燒肉晚宴。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell 狸小路',
+            dayNum: 5, date: '11/7 (週六)', dateShort: '11/07', title: '札幌金色銀杏大道與城市紅葉', mainTheme: '登別熊牧場體驗、螃蟹名店午餐、市區紅葉與銀杏巡禮、和牛燒肉晚宴。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell',
             items: [
               { time: '10:00', title: '酒店出發', desc: '早餐後辦理 Check-out。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '10:00 - 11:00', title: '登別熊牧場', desc: '停留 1 小時。搭乘纜車上山，親手餵食活潑可愛的北海道棕熊。', location: '登別熊牧場', website: 'https://bearpark.jp/hant/', isKey: false, isZoo: true, expanded: false },
@@ -923,12 +923,12 @@
             ]
           },
           {
-            dayNum: 6, date: '11/8 (週日)', dateShort: '11/08', title: '積丹藍絕景與小樽運河夜色', mainTheme: '積丹半島絕壁海景、小樽懷舊運河散策與天狗山夜景。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell 狸小路',
+            dayNum: 6, date: '11/8 (週日)', dateShort: '11/08', title: '積丹藍絕景與小樽運河夜色', mainTheme: '積丹半島絕壁海景、小樽懷舊運河散策與天狗山夜景。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell',
             items: [
               { time: '08:30 - 10:30', title: '酒店出發', desc: '長途車程 2 小時，專車由札幌啟程前往積丹半島。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '10:30 - 11:45', title: '神威岬', desc: '停留 1 小時 15 分鐘。360 度觀賞震撼人心的清澈「積丹藍」大海與奇岩絕景。', location: '神威岬', website: 'https://dribs-drabs.com/cape-kamui/', isKey: true, isZoo: false, expanded: false },
               { time: '11:45 - 13:00', title: '前往 おたる政寿司 本店', desc: '車程 1 小時 15 分鐘。', location: 'おたる政寿司 本店', isKey: false, isZoo: false, expanded: false },
-              { time: '13:00 - 14:00', title: '【午餐】おたる政寿司 本店', desc: '享用極致新鮮的頂級海膽與美味海鮮丼。', location: 'おたる政寿司 本店', bookingCode: 'tabelog：ZGY9JC3QSY', note: '已預約 JPY 6,820/ppl 12貫握壽司，何小楓， 13:00， 7 位', isKey: false, isZoo: false, expanded: false },
+              { time: '13:00 - 14:00', title: '【午餐】おたる政寿司 本店', desc: '享用極致新鮮的頂級海膽與美味海鮮丼。', location: 'おたる政寿司 本店', bookingCode: 'tabelog：ZGY9JC3QSY', note: '透過 Tabelog 預約，已預留每位 JPY 6,820 Lunch Omakase，請準時抵達，出示預約編號。', isKey: false, isZoo: false, expanded: false },
               { time: '14:00 - 14:10', title: '前往手宮公園', desc: '車程 10 分鐘。', location: '手宮公園', isKey: false, isZoo: false, expanded: false },
               { time: '14:10 - 15:10', title: '手宮公園', desc: '停留 1 小時。俯瞰港口紅葉。', location: '手宮公園', website: 'https://dribs-drabs.com/temiya-park/', isKey: true, isZoo: false, expanded: false },
               { time: '15:10 - 15:20', title: '前往小樽運河區', desc: '車程 10 分鐘。', location: '小樽運河', isKey: false, isZoo: false, expanded: false },
@@ -941,12 +941,12 @@
             ]
           },
           {
-            dayNum: 7, date: '11/9 (週一)', dateShort: '11/09', title: '大佛建築與購物狂歡', mainTheme: '參觀安藤忠雄大師建築靈魂、美味拉麵與雞蛋冰淇淋、三井 Outlet 購物血拼。', hotel: 'ESCON Field Hokkaido 站前', hotelShort: 'ESCON 站前',
+            dayNum: 7, date: '11/9 (週一)', dateShort: '11/09', title: '大佛建築與購物狂歡', mainTheme: '參觀安藤忠雄大師建築靈魂、美味拉麵與雞蛋冰淇淋、三井 Outlet 購物血拼。', hotel: 'ESCON Field Hokkaido 站前', hotelShort: 'EsCON',
             items: [
               { time: '11:00', title: '酒店出發前往真駒內瀧野靈園', desc: '車程約 30 分鐘。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '11:30 - 13:00', title: '真駒內瀧野靈園 (頭大佛、摩艾石像)', desc: '停留 1 小時 30 分鐘。參觀安藤忠雄大師設計的靈魂建築。', location: '真駒內瀧野靈園', website: 'https://www.bigfang.tw/blog/post/makomanai-takino-cemetery', isKey: true, isZoo: false, expanded: false },
               { time: '13:00 - 13:15', title: '前往とりたまファーム 拉麵', desc: '車程約 15 分鐘。', location: 'とりたまファーム', isKey: false, isZoo: false, expanded: false },
-              { time: '13:15 - 14:15', title: '【午餐】とりたまファーム 拉麵', desc: '享用美味拉麵午餐。', location: 'とりたまファーム', isKey: false, isZoo: false, expanded: false },
+              { time: '13:15 - 14:15', title: '【午晚餐】とりたまファーム 拉麵', desc: '享用美味拉麵午餐。', location: 'とりたまファーム', isKey: false, isZoo: false, expanded: false },
               { time: '14:15', title: '【甜點】コッコテラス吃蛋冰淇淋', desc: '品嚐香濃地道雞蛋冰淇淋。', location: 'コッコテラス', isKey: false, isZoo: false, expanded: false },
               { time: '14:30 - 15:00', title: '前往北廣島', desc: '車程約 30 分鐘。', location: '三井 Outlet Park 札幌北廣島', isKey: false, isZoo: false, expanded: false },
               { time: '15:00 - 20:00', title: '三井 Outlet Park 北廣島', desc: '停留 5 小時。盡情購物血拼，並於 Outlet 享用晚餐。', location: '三井 Outlet Park 札幌北廣島', isKey: false, isZoo: false, expanded: false },
