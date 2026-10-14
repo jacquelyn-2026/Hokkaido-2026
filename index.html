@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>北海道紅葉狩 8天7夜深度遊</title>
+  <title>北海道紅葉狩</title>
 
   <!-- iOS Web App Capable Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -73,22 +73,38 @@
     .highlight-card {
       animation: pulse-highlight 1.5s ease-in-out 2;
     }
+
+    /* Dynamic font size classes */
+    .app-text-sm {
+      font-size: 13px;
+    }
+    .app-text-lg {
+      font-size: 15px;
+    }
+    .app-text-sm .card-title { font-size: 14px; }
+    .app-text-lg .card-title { font-size: 17px; }
+    .app-text-sm .card-desc { font-size: 12px; }
+    .app-text-lg .card-desc { font-size: 14px; }
+    .app-text-sm .card-sub { font-size: 11px; }
+    .app-text-lg .card-sub { font-size: 13px; }
   </style>
 </head>
 
-<body class="text-slate-800 antialiased font-sans pb-28 min-h-screen" x-data="tripApp()">
+<body class="text-slate-800 antialiased font-sans pb-28 min-h-screen" x-data="tripApp()" :class="textSize === 'large' ? 'app-text-lg' : 'app-text-sm'">
 
   <!-- 頂部 Header -->
   <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-orange-100 px-4 py-3 shadow-sm flex items-center justify-between">
     <div class="flex items-center space-x-2">
       <span class="text-2xl">🍁</span>
-      <h1 class="text-base font-bold text-brand-700 tracking-tight" x-text="tripTitle"></h1>
+      <h1 class="text-base font-bold text-brand-700 tracking-tight">北海道紅葉狩</h1>
     </div>
     <div class="flex items-center gap-2">
-      <span class="text-[10px] bg-orange-100 text-orange-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-        <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-        本地儲存
-      </span>
+      <!-- 字體大小切換按鈕 -->
+      <button @click="toggleTextSize()" class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full flex items-center gap-1 border border-amber-200 transition-colors">
+        <i class="fa-solid fa-text-height text-amber-600"></i>
+        <span x-text="textSize === 'large' ? '文字：大' : '文字：小'"></span>
+      </button>
+
       <button @click="showModal = true" class="text-xs bg-brand-50 text-brand-600 hover:bg-brand-100 font-medium px-2.5 py-1 rounded-full flex items-center gap-1 border border-brand-200">
         <i class="fa-solid fa-circle-question"></i>
         <span>說明</span>
@@ -105,15 +121,15 @@
         <div class="absolute -right-4 -bottom-4 text-white/15 text-8xl font-black">🍁</div>
         <span class="inline-block bg-white/20 backdrop-blur-md text-xs font-semibold px-2.5 py-1 rounded-full mb-2">旅行計畫</span>
         <h2 class="text-2xl font-bold mb-1" x-text="tripTitle"></h2>
-        <p class="text-orange-100 text-xs mb-4">秋季賞楓與美食深度巡禮 (8天7夜)</p>
+        <p class="text-orange-100 card-desc mb-4">秋季賞楓與美食深度巡禮 (8天7夜)</p>
 
-        <div class="grid grid-cols-2 gap-2 text-xs bg-white/15 rounded-xl p-3 backdrop-blur-sm border border-white/10">
+        <div class="grid grid-cols-2 gap-2 card-desc bg-white/15 rounded-xl p-3 backdrop-blur-sm border border-white/10">
           <div>
-            <span class="text-orange-100 block text-[11px]">旅行日期</span>
+            <span class="text-orange-100 block card-sub">旅行日期</span>
             <span class="font-bold">2026/11/03 - 11/10</span>
           </div>
           <div>
-            <span class="text-orange-100 block text-[11px]">同行成員</span>
+            <span class="text-orange-100 block card-sub">同行成員</span>
             <span class="font-bold">Man, Amy, Kenny, Jacquelyn</span>
           </div>
         </div>
@@ -123,10 +139,10 @@
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
         <div class="flex justify-between items-center border-b border-orange-100/60 pb-2">
           <div>
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+            <h3 class="font-bold text-slate-800 card-title flex items-center gap-1.5">
               <i class="fa-solid fa-note-sticky text-amber-500"></i> 團友通知事項
             </h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">成員溫馨提示與注意事項卡片</p>
+            <p class="card-sub text-slate-400 mt-0.5">成員溫馨提示與注意事項卡片</p>
           </div>
           <button @click="addNotice()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 transition-colors shadow-sm">
             <i class="fa-solid fa-plus"></i>
@@ -139,7 +155,7 @@
           <template x-for="(n, index) in notices" :key="n.id">
             <div class="bg-gradient-to-br from-amber-50/90 to-orange-50/90 rounded-2xl p-3.5 shadow-sm border border-amber-200 relative space-y-2">
               <div class="flex justify-between items-start">
-                <span class="text-[10px] bg-amber-200/60 text-amber-900 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span class="card-sub bg-amber-200/60 text-amber-900 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                   <i class="fa-solid fa-bullhorn text-[9px]"></i>
                   <span x-text="n.date"></span>
                 </span>
@@ -156,19 +172,19 @@
               <!-- 卡片內容：正常顯示 vs 編輯模式 -->
               <template x-if="!n.isEditing">
                 <div>
-                  <h4 class="font-bold text-slate-800 text-sm mb-1" x-text="n.title"></h4>
-                  <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line" x-text="n.content"></p>
+                  <h4 class="font-bold text-slate-800 card-title mb-1" x-text="n.title"></h4>
+                  <p class="card-desc text-slate-700 leading-relaxed whitespace-pre-line" x-text="n.content"></p>
                 </div>
               </template>
 
               <template x-if="n.isEditing">
-                <div class="space-y-2 text-xs pt-1">
+                <div class="space-y-2 card-desc pt-1">
                   <div>
-                    <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">標題</label>
+                    <label class="card-sub text-slate-400 block font-semibold mb-0.5">標題</label>
                     <input type="text" x-model="n.title" @input="saveToLocalStorage()" class="editable-input font-bold">
                   </div>
                   <div>
-                    <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">通知內容</label>
+                    <label class="card-sub text-slate-400 block font-semibold mb-0.5">通知內容</label>
                     <textarea x-model="n.content" @input="saveToLocalStorage()" rows="3" class="editable-input"></textarea>
                   </div>
                   <button @click="n.isEditing = false" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-xs transition-colors">
@@ -184,23 +200,23 @@
       <!-- 每日行程總覽 -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
         <div class="flex justify-between items-center border-b border-orange-100/60 pb-2">
-          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+          <h3 class="font-bold text-slate-800 card-title flex items-center gap-1.5">
             <i class="fa-solid fa-route text-brand-500"></i> 每日行程總覽 (8天7夜)
           </h3>
           <span class="text-xs text-brand-600 font-medium cursor-pointer hover:underline" @click="currentTab = 'itinerary'">完整行程 &rarr;</span>
         </div>
 
-        <div class="space-y-2 text-xs">
+        <div class="space-y-2 card-desc">
           <template x-for="(day, index) in itinerary" :key="index">
             <div class="p-3 rounded-xl bg-orange-50/60 hover:bg-orange-100/50 transition-colors cursor-pointer border border-orange-100" @click="currentTab = 'itinerary'; selectDay(index)">
               <div class="flex items-center justify-between font-semibold text-brand-700 mb-1">
                 <span x-text="`Day ${day.dayNum} (${day.date})`"></span>
-                <span class="text-[11px] text-slate-500 font-normal flex items-center gap-1 bg-white/80 px-2 py-0.5 rounded-md border border-orange-100">
+                <span class="card-sub text-slate-500 font-normal flex items-center gap-1 bg-white/80 px-2 py-0.5 rounded-md border border-orange-100">
                   <i class="fa-solid fa-bed text-brand-400"></i>
                   <span x-text="day.hotelShort"></span>
                 </span>
               </div>
-              <p class="text-slate-600 text-xs line-clamp-1" x-text="day.mainTheme"></p>
+              <p class="text-slate-600 card-desc line-clamp-1" x-text="day.mainTheme"></p>
             </div>
           </template>
         </div>
@@ -240,7 +256,7 @@
             <span x-text="itinerary[activeDayIndex].hotel"></span>
           </button>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5" x-text="itinerary[activeDayIndex].mainTheme"></p>
+        <p class="card-desc text-slate-500 mt-0.5" x-text="itinerary[activeDayIndex].mainTheme"></p>
       </div>
 
       <div class="relative pl-4 border-l-2 border-brand-300 space-y-4 my-2">
@@ -250,31 +266,31 @@
 
             <!-- 一般顯示模式 -->
             <div class="flex items-start justify-between gap-2">
-              <div class="flex-1 cursor-pointer" @click="item.expanded = !item.expanded">
+              <div class="flex-1 cursor-pointer" @click="toggleItemExpand(activeDayIndex, itemIdx)">
                 <div class="flex flex-wrap items-center gap-1.5 mb-1">
                   <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded" x-text="item.time"></span>
                   <template x-if="item.isKey">
-                    <span class="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                    <span class="card-sub bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
                       <i class="fa-solid fa-leaf text-red-600"></i> 景點
                     </span>
                   </template>
                   <template x-if="item.isZoo">
-                    <span class="text-[10px] bg-sky-100 text-sky-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                    <span class="card-sub bg-sky-100 text-sky-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
                       <i class="fa-solid fa-kiwi-bird"></i> 動物園
                     </span>
                   </template>
                   <template x-if="item.bookingCode">
-                    <button @click.stop="goToBooking(item.title)" class="text-[10px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded flex items-center gap-1 border border-amber-300 transition-colors">
+                    <button @click.stop="goToBooking(item.title)" class="card-sub bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded flex items-center gap-1 border border-amber-300 transition-colors">
                       <i class="fa-solid fa-ticket"></i> 檢視預約
                     </button>
                   </template>
-                  <span class="text-[10px] text-slate-400 ml-auto font-medium" x-text="item.expanded ? '▲ 收起詳細' : '▼ 點擊檢視/編輯'"></span>
+                  <span class="card-sub text-slate-400 ml-auto font-medium" x-text="item.expanded ? '▲ 收起詳細' : '▼ 點擊檢視/編輯'"></span>
                 </div>
 
-                <h3 class="font-bold text-sm text-slate-800" x-text="item.title"></h3>
-                <p class="text-xs text-slate-500 mt-0.5 leading-relaxed" x-text="item.desc"></p>
+                <h3 class="font-bold card-title text-slate-800" x-text="item.title"></h3>
+                <p class="card-desc text-slate-500 mt-0.5 leading-relaxed" x-text="item.desc"></p>
                 <template x-if="item.note">
-                  <p class="text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded-md mt-1 font-medium border border-amber-100 inline-block" x-text="`💡 ${item.note}`"></p>
+                  <p class="card-sub text-amber-700 bg-amber-50 px-2 py-1 rounded-md mt-1 font-medium border border-amber-100 inline-block" x-text="`💡 ${item.note}`"></p>
                 </template>
               </div>
 
@@ -283,7 +299,7 @@
                 <template x-if="item.location">
                   <button @click="openGoogleMap(item.location)" class="bg-brand-50 text-brand-600 hover:bg-brand-100 p-1.5 rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 w-12 h-11 transition-colors border border-brand-100">
                     <i class="fa-solid fa-map-location-dot text-xs"></i>
-                    <span class="text-[9px] font-bold">地圖</span>
+                    <span class="card-sub font-bold">地圖</span>
                   </button>
                 </template>
 
@@ -291,7 +307,7 @@
                 <template x-if="item.website">
                   <button @click="openExternalUrl(item.website)" class="bg-amber-50 text-amber-700 hover:bg-amber-100 p-1.5 rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 w-12 h-11 transition-colors border border-amber-200">
                     <i class="fa-solid fa-circle-info text-xs"></i>
-                    <span class="text-[9px] font-bold">介紹</span>
+                    <span class="card-sub font-bold">介紹</span>
                   </button>
                 </template>
               </div>
@@ -299,37 +315,37 @@
 
             <!-- 展開後的詳細資訊與編輯表單 -->
             <div x-show="item.expanded" x-transition class="mt-3 pt-3 border-t border-orange-100 space-y-3 bg-orange-50/30 p-3 rounded-xl">
-              <div class="text-xs font-bold text-brand-700 flex items-center gap-1">
+              <div class="card-desc font-bold text-brand-700 flex items-center gap-1">
                 <i class="fa-solid fa-pen-to-square"></i> 編輯此行程項目
               </div>
-              <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="grid grid-cols-2 gap-2 card-desc">
                 <div>
-                  <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">時間</label>
+                  <label class="card-sub text-slate-400 block font-semibold mb-0.5">時間</label>
                   <input type="text" x-model="item.time" @input="saveToLocalStorage()" class="editable-input">
                 </div>
                 <div>
-                  <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">預約編號</label>
+                  <label class="card-sub text-slate-400 block font-semibold mb-0.5">預約編號</label>
                   <input type="text" x-model="item.bookingCode" @input="saveToLocalStorage()" placeholder="無則留空" class="editable-input font-mono">
                 </div>
               </div>
-              <div class="text-xs">
-                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">標題</label>
+              <div class="card-desc">
+                <label class="card-sub text-slate-400 block font-semibold mb-0.5">標題</label>
                 <input type="text" x-model="item.title" @input="saveToLocalStorage()" class="editable-input font-bold">
               </div>
-              <div class="text-xs">
-                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">詳細說明 / 描述</label>
+              <div class="card-desc">
+                <label class="card-sub text-slate-400 block font-semibold mb-0.5">詳細說明 / 描述</label>
                 <textarea x-model="item.desc" @input="saveToLocalStorage()" rows="2" class="editable-input"></textarea>
               </div>
-              <div class="text-xs">
-                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">備註 / 提示</label>
+              <div class="card-desc">
+                <label class="card-sub text-slate-400 block font-semibold mb-0.5">備註 / 提示</label>
                 <input type="text" x-model="item.note" @input="saveToLocalStorage()" placeholder="例如：票價、注意事項" class="editable-input">
               </div>
-              <div class="text-xs">
-                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">地圖搜尋地名 (留空則不顯示地圖按鈕)</label>
+              <div class="card-desc">
+                <label class="card-sub text-slate-400 block font-semibold mb-0.5">地圖搜尋地名 (留空則不顯示地圖按鈕)</label>
                 <input type="text" x-model="item.location" @input="saveToLocalStorage()" placeholder="例如：新千歲機場" class="editable-input">
               </div>
-              <div class="text-xs">
-                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">介紹連結網址 (留空則不顯示介紹按鈕)</label>
+              <div class="card-desc">
+                <label class="card-sub text-slate-400 block font-semibold mb-0.5">介紹連結網址 (留空則不顯示介紹按鈕)</label>
                 <input type="text" x-model="item.website" @input="saveToLocalStorage()" placeholder="https://..." class="editable-input font-mono">
               </div>
             </div>
@@ -340,7 +356,7 @@
 
     <!-- 3. 預約資訊 (Bookings) -->
     <div x-show="currentTab === 'bookings'" x-transition:enter="transition ease-out duration-200" class="space-y-3">
-      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center gap-2.5 text-amber-900 text-xs">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center gap-2.5 text-amber-900 card-desc">
         <i class="fa-solid fa-ticket text-amber-600 text-lg flex-shrink-0"></i>
         <span>所有餐廳與活動預約資訊均整理於此。</span>
       </div>
@@ -349,8 +365,8 @@
         <div :id="`booking-${b.id}`" class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-2 transition-all duration-300">
           <div class="flex justify-between items-start">
             <div>
-              <span class="text-[10px] bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="b.category"></span>
-              <h3 class="font-bold text-slate-800 text-sm mt-1" x-text="b.title"></h3>
+              <span class="card-sub bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="b.category"></span>
+              <h3 class="font-bold text-slate-800 card-title mt-1" x-text="b.title"></h3>
             </div>
             
             <!-- 右側按鈕區域：地圖與確認信按鈕 -->
@@ -370,7 +386,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-orange-50/40 p-2.5 rounded-xl">
+          <div class="grid grid-cols-2 gap-2 card-desc text-slate-600 bg-orange-50/40 p-2.5 rounded-xl">
             <div><span class="text-slate-400">日期：</span><span class="font-medium" x-text="b.date"></span></div>
             <div><span class="text-slate-400">時間：</span><span class="font-medium" x-text="b.time"></span></div>
             <div class="col-span-2"><span class="text-slate-400">預約號碼：</span><span class="font-bold text-amber-700 font-mono" x-text="b.code || '現場安排'"></span></div>
@@ -380,7 +396,7 @@
           </div>
 
           <template x-if="b.notice">
-            <p class="text-[11px] text-amber-800 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100 font-medium" x-text="`💡 ${b.notice}`"></p>
+            <p class="card-sub text-amber-800 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100 font-medium" x-text="`💡 ${b.notice}`"></p>
           </template>
         </div>
       </template>
@@ -392,9 +408,9 @@
         <div :id="`hotel-${h.id}`" class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-2 transition-all duration-300">
           <div class="flex justify-between items-start">
             <div>
-              <span class="text-[10px] bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="h.nights"></span>
-              <h3 class="font-bold text-slate-800 text-base mt-1" x-text="h.nameZh"></h3>
-              <p class="text-xs text-slate-400 font-serif" x-text="h.namejp"></p>
+              <span class="card-sub bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="h.nights"></span>
+              <h3 class="font-bold text-slate-800 card-title mt-1" x-text="h.nameZh"></h3>
+              <p class="card-desc text-slate-400 font-serif" x-text="h.namejp"></p>
             </div>
             
             <!-- 右側地圖與確認信按鈕 -->
@@ -416,7 +432,7 @@
             </div>
           </div>
 
-          <div class="bg-orange-50/50 p-2.5 rounded-xl space-y-1.5 text-xs border border-orange-100">
+          <div class="bg-orange-50/50 p-2.5 rounded-xl space-y-1.5 card-desc border border-orange-100">
             <div class="flex justify-between">
               <span class="text-slate-400">Check-in：</span>
               <span class="font-medium text-slate-700" x-text="h.checkIn"></span>
@@ -437,52 +453,55 @@
       </template>
     </div>
 
-    <!-- 5. 費用明細 (Expenses & Split-Bill) -->
+    <!-- 5. 費用明細 (Expenses & Split-Bill) Responsive Screen Layout -->
     <div x-show="currentTab === 'expenses'" x-transition:enter="transition ease-out duration-200" class="space-y-4">
+      
+      <!-- 匯率與成員設定卡片 -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
-        <div class="flex justify-between items-center border-b pb-2">
-          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <div class="flex flex-wrap justify-between items-center border-b pb-2 gap-1">
+          <h3 class="font-bold text-slate-800 card-title flex items-center gap-1.5">
             <i class="fa-solid fa-coins text-amber-600"></i> 匯率與成員設定
           </h3>
-          <span class="text-[10px] bg-brand-50 text-brand-600 px-2 py-0.5 rounded font-mono">1 HKD ≈ <span x-text="exchangeRate"></span> JPY</span>
+          <span class="card-sub bg-brand-50 text-brand-600 px-2 py-0.5 rounded font-mono">1 HKD ≈ <span x-text="exchangeRate"></span> JPY</span>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 card-desc">
           <div>
-            <label class="text-[10px] text-slate-400 block font-semibold mb-1">自訂匯率 (1 HKD = JPY)</label>
+            <label class="card-sub text-slate-400 block font-semibold mb-1">自訂匯率 (1 HKD = JPY)</label>
             <input type="number" step="0.1" x-model.number="exchangeRate" @input="saveToLocalStorage()" class="editable-input font-bold text-slate-700">
           </div>
           <div>
-            <label class="text-[10px] text-slate-400 block font-semibold mb-1">成員名單 (用逗號隔開)</label>
+            <label class="card-sub text-slate-400 block font-semibold mb-1">成員名單 (用逗號隔開)</label>
             <input type="text" :value="members.join(', ')" @change="updateMembers($event.target.value)" class="editable-input font-bold text-slate-700" placeholder="Man, Amy, Kenny, Jacquelyn">
           </div>
         </div>
       </div>
 
+      <!-- 新增帳目 / 記帳卡片 (iPhone 響應式優化) -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
-        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 border-b pb-2">
+        <h3 class="font-bold text-slate-800 card-title flex items-center gap-1.5 border-b pb-2">
           <i class="fa-solid fa-cart-plus text-brand-500"></i> 新增帳目 / 記帳
         </h3>
 
-        <div class="space-y-2.5 text-xs">
-          <div class="grid grid-cols-2 gap-2">
+        <div class="space-y-3 card-desc">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">日期</label>
+              <label class="card-sub text-slate-400 block font-semibold mb-0.5">日期</label>
               <input type="date" x-model="newExpense.date" class="editable-input">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">項目名稱</label>
+              <label class="card-sub text-slate-400 block font-semibold mb-0.5">項目名稱</label>
               <input type="text" x-model="newExpense.title" placeholder="例如：午餐" class="editable-input">
             </div>
           </div>
 
-          <div class="grid grid-cols-3 gap-2">
-            <div class="col-span-2">
-              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">付款總額</label>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-8 sm:col-span-9">
+              <label class="card-sub text-slate-400 block font-semibold mb-0.5">付款總額</label>
               <input type="number" step="any" x-model.number="newExpense.amount" placeholder="金額" class="editable-input font-bold text-brand-600">
             </div>
-            <div>
-              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">幣種</label>
+            <div class="col-span-4 sm:col-span-3">
+              <label class="card-sub text-slate-400 block font-semibold mb-0.5">幣種</label>
               <select x-model="newExpense.currency" class="editable-input font-bold">
                 <option value="JPY">JPY</option>
                 <option value="HKD">HKD</option>
@@ -490,11 +509,61 @@
             </div>
           </div>
 
-          <button @click="addExpense()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center gap-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="card-sub text-slate-400 block font-semibold mb-0.5">付款人</label>
+              <select x-model="newExpense.payer" class="editable-input font-bold">
+                <template x-for="m in members" :key="m">
+                  <option :value="m" x-text="m"></option>
+                </template>
+              </select>
+            </div>
+          </div>
+
+          <button @click="addExpense()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center gap-1 mt-1">
             <i class="fa-solid fa-plus"></i> 新增此筆帳目
           </button>
         </div>
       </div>
+
+      <!-- 已紀錄帳目列表 (響應式卡片檢視) -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
+        <h3 class="font-bold text-slate-800 card-title flex items-center justify-between border-b pb-2">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-list-check text-brand-500"></i> 已記帳目列表</span>
+          <span class="card-sub text-slate-400" x-text="`共 ${expenses.length} 筆`"></span>
+        </h3>
+
+        <template x-if="expenses.length === 0">
+          <p class="text-slate-400 card-desc text-center py-4">目前尚無消費紀錄，歡迎新增！</p>
+        </template>
+
+        <div class="space-y-2.5">
+          <template x-for="(e, eIdx) in expenses" :key="e.id">
+            <div class="bg-orange-50/40 border border-orange-100 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="card-sub font-mono bg-white border border-orange-200 text-slate-600 px-1.5 py-0.5 rounded" x-text="e.date"></span>
+                  <h4 class="font-bold card-title text-slate-800" x-text="e.title"></h4>
+                </div>
+                <p class="card-sub text-slate-500" x-text="`付款人: ${e.payer}`"></p>
+              </div>
+
+              <div class="flex items-center justify-between sm:justify-end gap-3 pt-1 sm:pt-0 border-t sm:border-0 border-orange-100">
+                <div class="text-right">
+                  <span class="font-bold text-brand-600 card-title" x-text="`${e.currency} ${e.amount.toLocaleString()}`"></span>
+                  <template x-if="e.currency === 'JPY'">
+                    <p class="card-sub text-slate-400" x-text="`≈ HKD ${(e.amount / exchangeRate).toFixed(1)}`"></p>
+                  </template>
+                </div>
+                <button @click="deleteExpense(e.id)" class="text-slate-300 hover:text-red-500 p-1 transition-colors">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -503,14 +572,14 @@
   <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" x-transition>
     <div class="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3 shadow-xl">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+        <h3 class="font-bold text-slate-800 card-title flex items-center gap-1.5">
           <i class="fa-solid fa-database text-brand-500"></i> 本地儲存說明
         </h3>
         <button @click="showModal = false" class="text-slate-400 hover:text-slate-600">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
-      <div class="space-y-2 text-xs text-slate-600 leading-relaxed">
+      <div class="space-y-2 card-desc text-slate-600 leading-relaxed">
         <p>此網頁資料已改為儲存在您的瀏覽器本地（LocalStorage）。點選任一行程項目可展開詳細內容並直接編輯，修改會自動儲存於此裝置中。</p>
       </div>
       <button @click="showModal = false" class="w-full bg-brand-500 text-white font-bold py-2 rounded-xl text-xs hover:bg-brand-600 transition-colors">
@@ -553,6 +622,7 @@
         tripTitle: '北海道紅葉狩 8天7夜深度遊',
         activeDayIndex: 0,
         showModal: false,
+        textSize: 'small', // 'small' | 'large'
 
         exchangeRate: 20.0,
         members: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
@@ -573,10 +643,22 @@
           title: '',
           amount: null,
           currency: 'JPY',
-          payer: 'Man',
-          splitType: 'equal',
-          participants: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
-          customSplits: {}
+          payer: 'Man'
+        },
+
+        toggleTextSize() {
+          this.textSize = this.textSize === 'small' ? 'large' : 'small';
+          this.saveToLocalStorage();
+        },
+
+        toggleItemExpand(dayIdx, targetItemIdx) {
+          const currentItems = this.itinerary[dayIdx].items;
+          const isCurrentlyExpanded = currentItems[targetItemIdx].expanded;
+
+          // 自動關閉同一個 Day 中的所有其他展開卡片
+          currentItems.forEach((item, idx) => {
+            item.expanded = (idx === targetItemIdx) ? !isCurrentlyExpanded : false;
+          });
         },
 
         initLocalStorage() {
@@ -591,6 +673,7 @@
               if (data.members) this.members = data.members;
               if (data.exchangeRate) this.exchangeRate = data.exchangeRate;
               if (data.notices) this.notices = data.notices;
+              if (data.textSize) this.textSize = data.textSize;
             } catch (e) {
               console.error('Failed to load local storage', e);
             }
@@ -605,7 +688,8 @@
             expenses: this.expenses,
             members: this.members,
             exchangeRate: this.exchangeRate,
-            notices: this.notices
+            notices: this.notices,
+            textSize: this.textSize
           };
           localStorage.setItem('hokkaido_trip_local_data', JSON.stringify(data));
         },
@@ -619,7 +703,7 @@
           if (!hotelName || hotelName === '溫暖的家' || hotelName === '賦歸' || hotelName === '回家') return;
           this.currentTab = 'hotels';
           let match = null;
-          if (hotelName.includes('La\'gent') || hotelName.includes('La’gent') || hotelName.includes('La gent')) {
+          if (hotelName.includes('Granbell') || hotelName.includes('granbell') || hotelName.includes('狸小路')) {
             match = this.hotels.find(h => h.id === 'h4');
           } else if (hotelName.includes('ESCON') || hotelName.includes('escon')) {
             match = this.hotels.find(h => h.id === 'h5');
@@ -715,7 +799,6 @@
           const newM = inputStr.split(',').map(s => s.trim()).filter(Boolean);
           if (newM.length > 0) {
             this.members = newM;
-            this.newExpense.participants = [...newM];
             this.newExpense.payer = newM[0];
             this.saveToLocalStorage();
           }
@@ -732,13 +815,19 @@
             title: this.newExpense.title,
             amount: parseFloat(this.newExpense.amount),
             currency: this.newExpense.currency,
-            payer: this.newExpense.payer,
-            settled: false
+            payer: this.newExpense.payer
           };
           this.expenses.unshift(expenseObj);
           this.newExpense.title = '';
           this.newExpense.amount = null;
           this.saveToLocalStorage();
+        },
+
+        deleteExpense(id) {
+          if (confirm('確定要刪除這筆帳目嗎？')) {
+            this.expenses = this.expenses.filter(e => e.id !== id);
+            this.saveToLocalStorage();
+          }
         },
 
         init() {
@@ -816,7 +905,7 @@
             ]
           },
           {
-            dayNum: 5, date: '11/7 (週六)', dateShort: '11/07', title: '札幌金色銀杏大道與城市紅葉', mainTheme: '登別熊牧場體驗、螃蟹名店午餐、市區紅葉與銀杏巡禮、和牛燒肉晚宴。', hotel: '札幌 La\'gent Stay', hotelShort: 'La\'gent Stay',
+            dayNum: 5, date: '11/7 (週六)', dateShort: '11/07', title: '札幌金色銀杏大道與城市紅葉', mainTheme: '登別熊牧場體驗、螃蟹名店午餐、市區紅葉與銀杏巡禮、和牛燒肉晚宴。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell 狸小路',
             items: [
               { time: '10:00', title: '酒店出發', desc: '早餐後辦理 Check-out。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '10:00 - 11:00', title: '登別熊牧場', desc: '停留 1 小時。搭乘纜車上山，親手餵食活潑可愛的北海道棕熊。', location: '登別熊牧場', website: 'https://bearpark.jp/hant/', isKey: false, isZoo: true, expanded: false },
@@ -828,13 +917,13 @@
               { time: '15:15 - 15:45', title: '北海道大學 (銀杏大道)', desc: '停留 30 分鐘。漫步於秋季限定、全北海道最壯麗美麗的金色銀杏隧道。', location: '北海道大學 銀杏大道', website: 'https://hokkaido.letsgojp.com/archives/19536/', isKey: true, isZoo: false, expanded: false },
               { time: '15:45 - 16:00', title: '前往 The Butter', desc: '車程約 15 分鐘。', location: 'The Butter', isKey: false, isZoo: false, expanded: false },
               { time: '16:00 - 17:00', title: '【下午茶】The Butter', desc: '享用精緻鬆餅與下午茶甜點，放鬆休息。', location: 'The Butter', note: '必食現做奶油與法式吐司', isKey: false, isZoo: false, expanded: false },
-              { time: '17:00', title: '入住 La\'gent Stay Sapporo Odori', desc: '辦理 Check-in，緊鄰大通公園與狸小路，位置極佳。', location: 'La\'gent Stay Sapporo Odori', isKey: false, isZoo: false, expanded: false },
+              { time: '17:00', title: '入住 Granbell Hotel Tanuki Sapporo', desc: '辦理 Check-in，緊鄰狸小路商店街，位置極佳。', location: 'Granbell Hotel Tanuki Sapporo', isKey: false, isZoo: false, expanded: false },
               { time: '18:00 - 20:00', title: '【晚餐】SAPPORO NIKUAZABU', desc: '享用精緻高級和牛燒肉料理。', location: 'NIKUAZABU 札幌店', bookingCode: 'tabelog: 7J2FHGUAAE', note: 'HO Siu Fung, 18:00, 7 位， restaurant contact: Whatsapp 81 90-5923-6117', isKey: false, isZoo: false, expanded: false },
               { time: '20:00 之後', title: '狸小路散策 / 薄野不夜天', desc: '感受 Nikka 威士忌霓虹招牌、體驗「夜間結尾芭菲甜點」或採購藥妝。', location: '狸小路商店街', isKey: false, isZoo: false, expanded: false }
             ]
           },
           {
-            dayNum: 6, date: '11/8 (週日)', dateShort: '11/08', title: '積丹藍絕景與小樽運河夜色', mainTheme: '積丹半島絕壁海景、小樽懷舊運河散策與天狗山夜景。', hotel: '札幌 La\'gent Stay', hotelShort: 'La\'gent Stay',
+            dayNum: 6, date: '11/8 (週日)', dateShort: '11/08', title: '積丹藍絕景與小樽運河夜色', mainTheme: '積丹半島絕壁海景、小樽懷舊運河散策與天狗山夜景。', hotel: 'Granbell Hotel Tanuki Sapporo', hotelShort: 'Granbell 狸小路',
             items: [
               { time: '08:30 - 10:30', title: '酒店出發', desc: '長途車程 2 小時，專車由札幌啟程前往積丹半島。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '10:30 - 11:45', title: '神威岬', desc: '停留 1 小時 15 分鐘。360 度觀賞震撼人心的清澈「積丹藍」大海與奇岩絕景。', location: '神威岬', website: 'https://dribs-drabs.com/cape-kamui/', isKey: true, isZoo: false, expanded: false },
@@ -933,7 +1022,7 @@
             code: '7J2FHGUAAE', 
             content: '精緻高級和牛燒肉晚宴', 
             location: 'NIKUAZABU 札幌店', 
-            confirmationUrl: '2026.11.07_1800_Sapporo Nikuazabu.pdf',
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCeYDObMnR9QZ_sXW4y1zXTAbG3y0-eablbfAEyOxsPy7M?e=k6arcz',
             notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
           },
           { 
@@ -946,7 +1035,7 @@
             content: '日本北海道小樽市最具代表性的老舗壽司店', 
             location: 'おたる政寿司', 
             confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQAwxzKYc9OYTryYByqPwvqvAXvmSO-APXDC9876WmeGVB0?e=DvOQSo',
-            notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
+            notice: '透過 Tabelog 預約，已預留每位 JPY 6,820 Lunch Omakase，請準時抵達，出示預約編號。'
           },
           { 
             id: '7',
@@ -1001,15 +1090,15 @@
           },
           { 
             id: 'h4',
-            nameZh: 'La\'gent Stay Sapporo Odori', 
-            namejp: 'ラ・ジェント・ステイ札幌大通', 
+            nameZh: 'Granbell Hotel Tanuki Sapporo', 
+            namejp: '札幌グランベルホテル狸小路', 
             nights: '入住 2 晚 (11/07 - 11/09)', 
             checkIn: '11/07 15:00 之後', 
             checkOut: '11/09 11:00 前', 
-            address: '北海道札幌市中央区南2条西5丁目26-5', 
-            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQAFvXy586L9ToBEuDUtzZedAe-grV23uj6kyfEHI-80Lnk?e=WfYU86',
-            phone: '+81-11-200-5507', 
-            notes: 'Booked 3 rooms all include Breakfast (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Superior Twin -23m2)\n- Room 2 - Ho Yui Man (Superior Twin  - 23m2)\n- Room 3 - Ho Yui Kwong Kenny (Superior Twin+Sofa  - 23m2)'
+            address: 'Granbell Hotel Tanuki Sapporo', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQAOHCyLNq4AQJEP_qh4w4A2AT5OZ1gvuKPT1isqD29on2w?e=FzN8gA',
+            phone: '+81-11-522-5541', 
+            notes: 'Booked 3 rooms only include 6 Breakfasts (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Deluxe Twin -19m2)\n- Room 2 - Ho Yui Man (Deluxe Double - 19m2)\n- Room 3 - Ho Yui Kwong Kenny (Triple - 29m2)'
           },
           { 
             id: 'h5',
@@ -1020,8 +1109,8 @@
             checkOut: '11/10 10:00 前', 
             address: '北海道北広島市Fビレッジ', 
             confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCqXTsEhA0uSbukEMgw5xmYAe8xG5JEI9sr-Q38UHg0sUs?e=nkufhA',
-            phone: '+81-11-xxx-xxxx', 
-            notes: 'Booked 3 rooms all include Breakfast (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Standard Floor Twin  - 23m2)\n- Room 2 - Tim Kwan Debbie So (Standard Floor Twin  - 23m2)\n- Room 3 - Ho Yui Kwong Kenny (Standard Floor Twin+1 ES CON FIELD View - 23m2)'
+            phone: '+81-50-3642-4646', 
+            notes: 'Booked 3 rooms all include Breakfast (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Standard Floor Twin - 23m2)\n- Room 2 - Tim Kwan Debbie So (Standard Floor Twin - 23m2)\n- Room 3 - Ho Yui Kwong Kenny (Standard Floor Twin+1 ES CON FIELD View - 23m2)'
           }
         ]
       }
