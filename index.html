@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>北海道紅葉狩 8天7夜深度遊</title>
+
+  <!-- iOS Web App Capable Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="北海道紅葉狩">
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:maple-leaf.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff7ed',  
+              100: '#ffedd5', 
+              200: '#fed7aa', 
+              300: '#fdba74', 
+              400: '#fb923c', 
+              500: '#ea580c', 
+              600: '#c2410c', 
+              700: '#9a3412', 
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #fdf8f6;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .editable-input {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      padding: 6px 10px;
+      width: 100%;
+      font-size: 13px;
+    }
+    .editable-input:focus {
+      outline: 2px solid #ea580c;
+      border-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulse-highlight {
+      0%, 100% { background-color: rgba(254, 215, 170, 0.3); border-color: #f97316; }
+      50% { background-color: rgba(251, 146, 60, 0.4); border-color: #ea580c; }
+    }
+    .highlight-card {
+      animation: pulse-highlight 1.5s ease-in-out 2;
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 antialiased font-sans pb-28 min-h-screen" x-data="tripApp()">
+
+  <!-- 頂部 Header -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-orange-100 px-4 py-3 shadow-sm flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <span class="text-2xl">🍁</span>
+      <h1 class="text-base font-bold text-brand-700 tracking-tight" x-text="tripTitle"></h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-[10px] bg-orange-100 text-orange-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+        <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
+        本地儲存
+      </span>
+      <button @click="showModal = true" class="text-xs bg-brand-50 text-brand-600 hover:bg-brand-100 font-medium px-2.5 py-1 rounded-full flex items-center gap-1 border border-brand-200">
+        <i class="fa-solid fa-circle-question"></i>
+        <span>說明</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主要內容 View -->
+  <main class="max-w-md mx-auto px-4 pt-4">
+
+    <!-- 1. 所有計畫 (Overview) -->
+    <div x-show="currentTab === 'plans'" x-transition:enter="transition ease-out duration-200" class="space-y-4">
+      <div class="bg-gradient-to-br from-brand-500 via-brand-600 to-amber-800 rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 text-white/15 text-8xl font-black">🍁</div>
+        <span class="inline-block bg-white/20 backdrop-blur-md text-xs font-semibold px-2.5 py-1 rounded-full mb-2">旅行計畫</span>
+        <h2 class="text-2xl font-bold mb-1" x-text="tripTitle"></h2>
+        <p class="text-orange-100 text-xs mb-4">秋季賞楓與美食深度巡禮 (8天7夜)</p>
+
+        <div class="grid grid-cols-2 gap-2 text-xs bg-white/15 rounded-xl p-3 backdrop-blur-sm border border-white/10">
+          <div>
+            <span class="text-orange-100 block text-[11px]">旅行日期</span>
+            <span class="font-bold">2026/11/03 - 11/10</span>
+          </div>
+          <div>
+            <span class="text-orange-100 block text-[11px]">同行成員</span>
+            <span class="font-bold">Man, Amy, Kenny, Jacquelyn</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 團友通知事項 (第一頁) -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
+        <div class="flex justify-between items-center border-b border-orange-100/60 pb-2">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-note-sticky text-amber-500"></i> 團友通知事項
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">成員溫馨提示與注意事項卡片</p>
+          </div>
+          <button @click="addNotice()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 transition-colors shadow-sm">
+            <i class="fa-solid fa-plus"></i>
+            <span>新增卡片</span>
+          </button>
+        </div>
+
+        <!-- Flash Cards List -->
+        <div class="space-y-3">
+          <template x-for="(n, index) in notices" :key="n.id">
+            <div class="bg-gradient-to-br from-amber-50/90 to-orange-50/90 rounded-2xl p-3.5 shadow-sm border border-amber-200 relative space-y-2">
+              <div class="flex justify-between items-start">
+                <span class="text-[10px] bg-amber-200/60 text-amber-900 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i class="fa-solid fa-bullhorn text-[9px]"></i>
+                  <span x-text="n.date"></span>
+                </span>
+                <div class="flex items-center gap-2">
+                  <button @click="n.isEditing = !n.isEditing" class="text-slate-400 hover:text-brand-600 text-xs p-1">
+                    <i class="fa-solid" :class="n.isEditing ? 'fa-check text-green-600' : 'fa-pen-to-square'"></i>
+                  </button>
+                  <button @click="deleteNotice(n.id)" class="text-slate-400 hover:text-red-600 text-xs p-1">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 卡片內容：正常顯示 vs 編輯模式 -->
+              <template x-if="!n.isEditing">
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm mb-1" x-text="n.title"></h4>
+                  <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line" x-text="n.content"></p>
+                </div>
+              </template>
+
+              <template x-if="n.isEditing">
+                <div class="space-y-2 text-xs pt-1">
+                  <div>
+                    <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">標題</label>
+                    <input type="text" x-model="n.title" @input="saveToLocalStorage()" class="editable-input font-bold">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">通知內容</label>
+                    <textarea x-model="n.content" @input="saveToLocalStorage()" rows="3" class="editable-input"></textarea>
+                  </div>
+                  <button @click="n.isEditing = false" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-xs transition-colors">
+                    完成編輯
+                  </button>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 每日行程總覽 -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
+        <div class="flex justify-between items-center border-b border-orange-100/60 pb-2">
+          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-route text-brand-500"></i> 每日行程總覽 (8天7夜)
+          </h3>
+          <span class="text-xs text-brand-600 font-medium cursor-pointer hover:underline" @click="currentTab = 'itinerary'">完整行程 &rarr;</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <template x-for="(day, index) in itinerary" :key="index">
+            <div class="p-3 rounded-xl bg-orange-50/60 hover:bg-orange-100/50 transition-colors cursor-pointer border border-orange-100" @click="currentTab = 'itinerary'; selectDay(index)">
+              <div class="flex items-center justify-between font-semibold text-brand-700 mb-1">
+                <span x-text="`Day ${day.dayNum} (${day.date})`"></span>
+                <span class="text-[11px] text-slate-500 font-normal flex items-center gap-1 bg-white/80 px-2 py-0.5 rounded-md border border-orange-100">
+                  <i class="fa-solid fa-bed text-brand-400"></i>
+                  <span x-text="day.hotelShort"></span>
+                </span>
+              </div>
+              <p class="text-slate-600 text-xs line-clamp-1" x-text="day.mainTheme"></p>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 全部行程 (Itinerary) -->
+    <div x-show="currentTab === 'itinerary'" x-transition:enter="transition ease-out duration-200" class="space-y-4">
+      <div class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+        <template x-for="(day, index) in itinerary" :key="index">
+          <button 
+            @click="activeDayIndex = index"
+            :class="activeDayIndex === index ? 'bg-brand-500 text-white shadow-md' : 'bg-white text-slate-600 border border-orange-200'"
+            class="flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all text-center min-w-[72px]">
+            <div x-text="`Day ${day.dayNum}`"></div>
+            <div class="text-[10px] opacity-80" x-text="day.dateShort"></div>
+          </button>
+        </template>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-orange-100 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold px-2 py-0.5 rounded bg-brand-100 text-brand-700" x-text="`Day ${itinerary[activeDayIndex].dayNum} • ${itinerary[activeDayIndex].date}`"></span>
+          <div class="flex items-center gap-2">
+            <button @click="exportDayItinerary(activeDayIndex)" class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-colors">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>分享此日行程</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <h2 class="text-base font-bold text-slate-800" x-text="itinerary[activeDayIndex].title"></h2>
+          <!-- 按鈕點擊可直達並高亮對應酒店頁面卡片 -->
+          <button @click="goToHotel(itinerary[activeDayIndex].hotel)" class="text-xs text-brand-600 bg-brand-50 hover:bg-brand-100 px-2 py-1 rounded-lg border border-brand-200 transition-colors flex items-center gap-1 font-semibold">
+            <i class="fa-solid fa-hotel text-brand-500"></i>
+            <span x-text="itinerary[activeDayIndex].hotel"></span>
+          </button>
+        </div>
+        <p class="text-xs text-slate-500 mt-0.5" x-text="itinerary[activeDayIndex].mainTheme"></p>
+      </div>
+
+      <div class="relative pl-4 border-l-2 border-brand-300 space-y-4 my-2">
+        <template x-for="(item, itemIdx) in itinerary[activeDayIndex].items" :key="itemIdx">
+          <div class="relative bg-white rounded-2xl p-3.5 shadow-sm border border-orange-100">
+            <div class="absolute -left-[23px] top-4 w-3.5 h-3.5 rounded-full bg-brand-500 border-2 border-white shadow-sm"></div>
+
+            <!-- 一般顯示模式 -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 cursor-pointer" @click="item.expanded = !item.expanded">
+                <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                  <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded" x-text="item.time"></span>
+                  <template x-if="item.isKey">
+                    <span class="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                      <i class="fa-solid fa-leaf text-red-600"></i> 景點
+                    </span>
+                  </template>
+                  <template x-if="item.isZoo">
+                    <span class="text-[10px] bg-sky-100 text-sky-700 font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                      <i class="fa-solid fa-kiwi-bird"></i> 動物園
+                    </span>
+                  </template>
+                  <template x-if="item.bookingCode">
+                    <button @click.stop="goToBooking(item.title)" class="text-[10px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded flex items-center gap-1 border border-amber-300 transition-colors">
+                      <i class="fa-solid fa-ticket"></i> 檢視預約
+                    </button>
+                  </template>
+                  <span class="text-[10px] text-slate-400 ml-auto font-medium" x-text="item.expanded ? '▲ 收起詳細' : '▼ 點擊檢視/編輯'"></span>
+                </div>
+
+                <h3 class="font-bold text-sm text-slate-800" x-text="item.title"></h3>
+                <p class="text-xs text-slate-500 mt-0.5 leading-relaxed" x-text="item.desc"></p>
+                <template x-if="item.note">
+                  <p class="text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded-md mt-1 font-medium border border-amber-100 inline-block" x-text="`💡 ${item.note}`"></p>
+                </template>
+              </div>
+
+              <!-- 右側按鈕區域：地圖按鈕與介紹按鈕 -->
+              <div class="flex flex-col gap-1.5 flex-shrink-0">
+                <template x-if="item.location">
+                  <button @click="openGoogleMap(item.location)" class="bg-brand-50 text-brand-600 hover:bg-brand-100 p-1.5 rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 w-12 h-11 transition-colors border border-brand-100">
+                    <i class="fa-solid fa-map-location-dot text-xs"></i>
+                    <span class="text-[9px] font-bold">地圖</span>
+                  </button>
+                </template>
+
+                <!-- 介紹連結按鈕 (如果設置了 website) -->
+                <template x-if="item.website">
+                  <button @click="openExternalUrl(item.website)" class="bg-amber-50 text-amber-700 hover:bg-amber-100 p-1.5 rounded-xl text-xs flex flex-col items-center justify-center gap-0.5 w-12 h-11 transition-colors border border-amber-200">
+                    <i class="fa-solid fa-circle-info text-xs"></i>
+                    <span class="text-[9px] font-bold">介紹</span>
+                  </button>
+                </template>
+              </div>
+            </div>
+
+            <!-- 展開後的詳細資訊與編輯表單 -->
+            <div x-show="item.expanded" x-transition class="mt-3 pt-3 border-t border-orange-100 space-y-3 bg-orange-50/30 p-3 rounded-xl">
+              <div class="text-xs font-bold text-brand-700 flex items-center gap-1">
+                <i class="fa-solid fa-pen-to-square"></i> 編輯此行程項目
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">時間</label>
+                  <input type="text" x-model="item.time" @input="saveToLocalStorage()" class="editable-input">
+                </div>
+                <div>
+                  <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">預約編號</label>
+                  <input type="text" x-model="item.bookingCode" @input="saveToLocalStorage()" placeholder="無則留空" class="editable-input font-mono">
+                </div>
+              </div>
+              <div class="text-xs">
+                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">標題</label>
+                <input type="text" x-model="item.title" @input="saveToLocalStorage()" class="editable-input font-bold">
+              </div>
+              <div class="text-xs">
+                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">詳細說明 / 描述</label>
+                <textarea x-model="item.desc" @input="saveToLocalStorage()" rows="2" class="editable-input"></textarea>
+              </div>
+              <div class="text-xs">
+                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">備註 / 提示</label>
+                <input type="text" x-model="item.note" @input="saveToLocalStorage()" placeholder="例如：票價、注意事項" class="editable-input">
+              </div>
+              <div class="text-xs">
+                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">地圖搜尋地名 (留空則不顯示地圖按鈕)</label>
+                <input type="text" x-model="item.location" @input="saveToLocalStorage()" placeholder="例如：新千歲機場" class="editable-input">
+              </div>
+              <div class="text-xs">
+                <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">介紹連結網址 (留空則不顯示介紹按鈕)</label>
+                <input type="text" x-model="item.website" @input="saveToLocalStorage()" placeholder="https://..." class="editable-input font-mono">
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- 3. 預約資訊 (Bookings) -->
+    <div x-show="currentTab === 'bookings'" x-transition:enter="transition ease-out duration-200" class="space-y-3">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center gap-2.5 text-amber-900 text-xs">
+        <i class="fa-solid fa-ticket text-amber-600 text-lg flex-shrink-0"></i>
+        <span>所有餐廳與活動預約資訊均整理於此。</span>
+      </div>
+
+      <template x-for="(b, bIdx) in bookings" :key="bIdx">
+        <div :id="`booking-${b.id}`" class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-2 transition-all duration-300">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="b.category"></span>
+              <h3 class="font-bold text-slate-800 text-sm mt-1" x-text="b.title"></h3>
+            </div>
+            
+            <!-- 右側按鈕區域：地圖與確認信按鈕 -->
+            <div class="flex flex-col gap-1.5 flex-shrink-0 items-end">
+              <template x-if="b.location">
+                <button @click="openGoogleMap(b.location)" class="bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 font-semibold transition-colors">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span>地圖</span>
+                </button>
+              </template>
+              <template x-if="b.confirmationUrl">
+                <button @click="openExternalUrl(b.confirmationUrl)" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 font-bold transition-colors shadow-sm">
+                  <i class="fa-solid fa-file-contract text-amber-600"></i>
+                  <span>確認信</span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-orange-50/40 p-2.5 rounded-xl">
+            <div><span class="text-slate-400">日期：</span><span class="font-medium" x-text="b.date"></span></div>
+            <div><span class="text-slate-400">時間：</span><span class="font-medium" x-text="b.time"></span></div>
+            <div class="col-span-2"><span class="text-slate-400">預約號碼：</span><span class="font-bold text-amber-700 font-mono" x-text="b.code || '現場安排'"></span></div>
+            <template x-if="b.content">
+              <div class="col-span-2"><span class="text-slate-400">預約內容：</span><span class="font-medium text-slate-700" x-text="b.content"></span></div>
+            </template>
+          </div>
+
+          <template x-if="b.notice">
+            <p class="text-[11px] text-amber-800 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100 font-medium" x-text="`💡 ${b.notice}`"></p>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!-- 4. 酒店資訊 (Hotels) -->
+    <div x-show="currentTab === 'hotels'" x-transition:enter="transition ease-out duration-200" class="space-y-3">
+      <template x-for="(h, hIdx) in hotels" :key="hIdx">
+        <div :id="`hotel-${h.id}`" class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-2 transition-all duration-300">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] bg-brand-100 text-brand-700 font-bold px-2 py-0.5 rounded" x-text="h.nights"></span>
+              <h3 class="font-bold text-slate-800 text-base mt-1" x-text="h.nameZh"></h3>
+              <p class="text-xs text-slate-400 font-serif" x-text="h.namejp"></p>
+            </div>
+            
+            <!-- 右側地圖與確認信按鈕 -->
+            <div class="flex flex-col gap-1.5 flex-shrink-0 items-end">
+              <template x-if="h.address">
+                <button @click="openGoogleMap(h.address)" class="bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 font-semibold transition-colors">
+                  <i class="fa-solid fa-map-pin"></i>
+                  <span>地圖</span>
+                </button>
+              </template>
+              
+              <!-- 確認信按鈕 (若設置 confirmationUrl) -->
+              <template x-if="h.confirmationUrl">
+                <button @click="openExternalUrl(h.confirmationUrl)" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 font-bold transition-colors shadow-sm">
+                  <i class="fa-solid fa-file-contract text-amber-600"></i>
+                  <span>確認信</span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="bg-orange-50/50 p-2.5 rounded-xl space-y-1.5 text-xs border border-orange-100">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Check-in：</span>
+              <span class="font-medium text-slate-700" x-text="h.checkIn"></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Check-out：</span>
+              <span class="font-medium text-slate-700" x-text="h.checkOut"></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">電話：</span>
+              <a :href="`tel:${h.phone}`" class="text-brand-600 font-medium underline" x-text="h.phone"></a>
+            </div>
+            <template x-if="h.notes">
+              <div class="pt-1 text-slate-600 border-t border-orange-100/60 whitespace-pre-line"><span class="text-slate-400">備註：</span><span x-text="h.notes"></span></div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- 5. 費用明細 (Expenses & Split-Bill) -->
+    <div x-show="currentTab === 'expenses'" x-transition:enter="transition ease-out duration-200" class="space-y-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-coins text-amber-600"></i> 匯率與成員設定
+          </h3>
+          <span class="text-[10px] bg-brand-50 text-brand-600 px-2 py-0.5 rounded font-mono">1 HKD ≈ <span x-text="exchangeRate"></span> JPY</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <label class="text-[10px] text-slate-400 block font-semibold mb-1">自訂匯率 (1 HKD = JPY)</label>
+            <input type="number" step="0.1" x-model.number="exchangeRate" @input="saveToLocalStorage()" class="editable-input font-bold text-slate-700">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block font-semibold mb-1">成員名單 (用逗號隔開)</label>
+            <input type="text" :value="members.join(', ')" @change="updateMembers($event.target.value)" class="editable-input font-bold text-slate-700" placeholder="Man, Amy, Kenny, Jacquelyn">
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-orange-100 space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5 border-b pb-2">
+          <i class="fa-solid fa-cart-plus text-brand-500"></i> 新增帳目 / 記帳
+        </h3>
+
+        <div class="space-y-2.5 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">日期</label>
+              <input type="date" x-model="newExpense.date" class="editable-input">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">項目名稱</label>
+              <input type="text" x-model="newExpense.title" placeholder="例如：午餐" class="editable-input">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div class="col-span-2">
+              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">付款總額</label>
+              <input type="number" step="any" x-model.number="newExpense.amount" placeholder="金額" class="editable-input font-bold text-brand-600">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block font-semibold mb-0.5">幣種</label>
+              <select x-model="newExpense.currency" class="editable-input font-bold">
+                <option value="JPY">JPY</option>
+                <option value="HKD">HKD</option>
+              </select>
+            </div>
+          </div>
+
+          <button @click="addExpense()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center gap-1">
+            <i class="fa-solid fa-plus"></i> 新增此筆帳目
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 說明 Modal -->
+  <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" x-transition>
+    <div class="bg-white rounded-2xl p-5 max-w-sm w-full space-y-3 shadow-xl">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-database text-brand-500"></i> 本地儲存說明
+        </h3>
+        <button @click="showModal = false" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="space-y-2 text-xs text-slate-600 leading-relaxed">
+        <p>此網頁資料已改為儲存在您的瀏覽器本地（LocalStorage）。點選任一行程項目可展開詳細內容並直接編輯，修改會自動儲存於此裝置中。</p>
+      </div>
+      <button @click="showModal = false" class="w-full bg-brand-500 text-white font-bold py-2 rounded-xl text-xs hover:bg-brand-600 transition-colors">
+        我知道了
+      </button>
+    </div>
+  </div>
+
+  <!-- 底部 Tab 導航欄（5 個 Tab） -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-orange-200 px-2 py-2 z-40 max-w-md mx-auto shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button @click="currentTab = 'plans'" :class="currentTab === 'plans' ? 'text-brand-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center py-1">
+        <i class="fa-solid fa-map text-base"></i>
+        <span class="text-[9px] mt-0.5">所有計畫</span>
+      </button>
+      <button @click="currentTab = 'itinerary'" :class="currentTab === 'itinerary' ? 'text-brand-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center py-1">
+        <i class="fa-solid fa-calendar-days text-base"></i>
+        <span class="text-[9px] mt-0.5">全部行程</span>
+      </button>
+      <button @click="currentTab = 'bookings'" :class="currentTab === 'bookings' ? 'text-brand-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center py-1">
+        <i class="fa-solid fa-receipt text-base"></i>
+        <span class="text-[9px] mt-0.5">預約資訊</span>
+      </button>
+      <button @click="currentTab = 'hotels'" :class="currentTab === 'hotels' ? 'text-brand-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center py-1">
+        <i class="fa-solid fa-hotel text-base"></i>
+        <span class="text-[9px] mt-0.5">酒店資訊</span>
+      </button>
+      <button @click="currentTab = 'expenses'" :class="currentTab === 'expenses' ? 'text-brand-600 font-bold' : 'text-slate-400'" class="flex flex-col items-center justify-center py-1">
+        <i class="fa-solid fa-calculator text-base"></i>
+        <span class="text-[9px] mt-0.5">費用明細</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- JS Alpine App Logic -->
+  <script>
+    function tripApp() {
+      return {
+        currentTab: 'plans',
+        tripTitle: '北海道紅葉狩 8天7夜深度遊',
+        activeDayIndex: 0,
+        showModal: false,
+
+        exchangeRate: 20.0,
+        members: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
+        expenses: [],
+
+        notices: [
+          {
+            id: 1,
+            title: '團友行前溫馨提示 🍁',
+            date: '2026/11/03',
+            content: '多謝大家抽空一齊去北海道玩！今次旅行主打輕鬆自由，我哋安排咗包車遊，隨停隨走無壓力～ 途中有想去嘅景點、打卡位或者想試嘅美食，隨時講聲，只要順路或者方便，行程可以隨時彈性調整！希望大家玩得開心！',
+            isEditing: false
+          }
+        ],
+
+        newExpense: {
+          date: new Date().toISOString().split('T')[0],
+          title: '',
+          amount: null,
+          currency: 'JPY',
+          payer: 'Man',
+          splitType: 'equal',
+          participants: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
+          customSplits: {}
+        },
+
+        initLocalStorage() {
+          const savedData = localStorage.getItem('hokkaido_trip_local_data');
+          if (savedData) {
+            try {
+              const data = JSON.parse(savedData);
+              if (data.itinerary) this.itinerary = data.itinerary;
+              if (data.bookings) this.bookings = data.bookings;
+              if (data.hotels) this.hotels = data.hotels;
+              if (data.expenses) this.expenses = data.expenses;
+              if (data.members) this.members = data.members;
+              if (data.exchangeRate) this.exchangeRate = data.exchangeRate;
+              if (data.notices) this.notices = data.notices;
+            } catch (e) {
+              console.error('Failed to load local storage', e);
+            }
+          }
+        },
+
+        saveToLocalStorage() {
+          const data = {
+            itinerary: this.itinerary,
+            bookings: this.bookings,
+            hotels: this.hotels,
+            expenses: this.expenses,
+            members: this.members,
+            exchangeRate: this.exchangeRate,
+            notices: this.notices
+          };
+          localStorage.setItem('hokkaido_trip_local_data', JSON.stringify(data));
+        },
+
+        selectDay(index) {
+          this.activeDayIndex = index;
+        },
+
+        // 跳轉至酒店頁面並高亮對應卡片
+        goToHotel(hotelName) {
+          if (!hotelName || hotelName === '溫暖的家' || hotelName === '賦歸' || hotelName === '回家') return;
+          this.currentTab = 'hotels';
+          let match = null;
+          if (hotelName.includes('La\'gent') || hotelName.includes('La’gent') || hotelName.includes('La gent')) {
+            match = this.hotels.find(h => h.id === 'h4');
+          } else if (hotelName.includes('ESCON') || hotelName.includes('escon')) {
+            match = this.hotels.find(h => h.id === 'h5');
+          } else {
+            match = this.hotels.find(h => hotelName.includes(h.nameZh) || h.nameZh.includes(hotelName));
+          }
+          if (match) {
+            this.$nextTick(() => {
+              const el = document.getElementById(`hotel-${match.id}`);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlight-card');
+                setTimeout(() => el.classList.remove('highlight-card'), 3000);
+              }
+            });
+          }
+        },
+
+        // 跳轉至預約資訊頁面並對應高亮顯示
+        goToBooking(itemTitle) {
+          this.currentTab = 'bookings';
+          const match = this.bookings.find(b => itemTitle.includes(b.title) || b.title.includes(itemTitle));
+          if (match) {
+            this.$nextTick(() => {
+              const el = document.getElementById(`booking-${match.id}`);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlight-card');
+                setTimeout(() => el.classList.remove('highlight-card'), 3000);
+              }
+            });
+          }
+        },
+
+        addNotice() {
+          const newCard = {
+            id: Date.now(),
+            title: '新通知備忘',
+            date: new Date().toISOString().split('T')[0],
+            content: '請在此輸入通知內容...',
+            isEditing: true
+          };
+          this.notices.unshift(newCard);
+          this.saveToLocalStorage();
+        },
+
+        deleteNotice(id) {
+          if (confirm('確定要刪除此卡片嗎？')) {
+            this.notices = this.notices.filter(n => n.id !== id);
+            this.saveToLocalStorage();
+          }
+        },
+
+        openGoogleMap(locationName) {
+          if (!locationName) return;
+          const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`;
+          window.open(url, '_blank');
+        },
+
+        openExternalUrl(url) {
+          if (!url) return;
+          window.open(url, '_blank');
+        },
+
+        exportDayItinerary(dayIndex) {
+          const day = this.itinerary[dayIndex];
+          if (!day) return;
+
+          let text = `🍁【Day ${day.dayNum} 行程安排 - ${day.date}】\n`;
+          text += `主題：${day.mainTheme}\n`;
+          text += `住宿：${day.hotel}\n`;
+          text += `------------------------------\n`;
+
+          day.items.forEach((item) => {
+            text += `📌 ${item.time} | ${item.title}\n`;
+            if (item.desc) text += `   💬 ${item.desc}\n`;
+            if (item.note) text += `   💡 備註: ${item.note}\n`;
+            if (item.bookingCode) text += `   🎫 預約編號: ${item.bookingCode}\n`;
+            text += `\n`;
+          });
+
+          text += `------------------------------\n`;
+          text += `祝今日旅途愉快！✨`;
+
+          navigator.clipboard.writeText(text).then(() => {
+            alert(`Day ${day.dayNum} 行程已成功複製到剪貼簿！`);
+          }).catch(() => {
+            alert(text);
+          });
+        },
+
+        updateMembers(inputStr) {
+          const newM = inputStr.split(',').map(s => s.trim()).filter(Boolean);
+          if (newM.length > 0) {
+            this.members = newM;
+            this.newExpense.participants = [...newM];
+            this.newExpense.payer = newM[0];
+            this.saveToLocalStorage();
+          }
+        },
+
+        addExpense() {
+          if (!this.newExpense.title || !this.newExpense.amount) {
+            alert('請填寫完整項目名稱與金額！');
+            return;
+          }
+          const expenseObj = {
+            id: Date.now(),
+            date: this.newExpense.date,
+            title: this.newExpense.title,
+            amount: parseFloat(this.newExpense.amount),
+            currency: this.newExpense.currency,
+            payer: this.newExpense.payer,
+            settled: false
+          };
+          this.expenses.unshift(expenseObj);
+          this.newExpense.title = '';
+          this.newExpense.amount = null;
+          this.saveToLocalStorage();
+        },
+
+        init() {
+          this.initLocalStorage();
+        },
+
+        itinerary: [
+          {
+            dayNum: 1, date: '11/3 (週二)', dateShort: '11/03', title: '抵達與長途南下', mainTheme: '抵達北海道，搭乘專車沿海岸線南下前往函館。', hotel: 'OMO5 函館', hotelShort: 'OMO5 函館',
+            items: [
+              { time: '09:10 - 14:50', title: '香港國際機場前往日本北海道新千歲機場✈️', desc: '航班 CX580，行程 5 小時 5 分鐘。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '15:00 - 16:00', title: '抵達新千歲機場✈️，入境手續，準備前往函館', desc: '長途車程約 3.5 小時。💡 建議於機場購買飯糰、炸雞於車上享用。司導資料後補。', location: '新千歲機場國際線', isKey: false, isZoo: false, expanded: false },
+              { time: '16:00 - 17:00', title: '機場會合，出發前往函館', desc: '車程約 1 小時，先前往有珠山服務區。', location: '有珠山服務區 (上行)', isKey: false, isZoo: false, expanded: false },
+              { time: '17:00 - 18:00', title: '【晚餐】有珠山服務區 (SA)', desc: '停留 1 小時。下車伸展筋骨並享用晚餐（推薦特產蟹肉飯）。', location: '有珠山服務區 (上行)', website: 'https://tc.tabirai.net/sightseeing/article/highway-hokkaido-5/', isKey: false, isZoo: false, expanded: false },
+              { time: '18:00 - 20:30', title: '前往函館市區', desc: '長途車程約 2.5 小時。沿噴火灣夜間南下，在車上舒適休息。', location: 'OMO5 函館', isKey: false, isZoo: false, expanded: false },
+              { time: '20:30', title: '入住 OMO5 函館', desc: '辦理 Check-in，享受星野集團懷舊港町氛圍與設施。', location: 'OMO5 函館 by Hoshino Resorts', note: '', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 2, date: '11/4 (週三)', dateShort: '11/04', title: '函館港町浪漫與紅葉名所', mainTheme: '暢遊函館三大賞楓名所、品嚐頂級海膽與和牛壽喜燒、專車直上函館山賞夜景。', hotel: 'OMO5 函館', hotelShort: 'OMO5 函館',
+            items: [
+              { time: '09:00 - 09:45', title: '酒店早餐', desc: '於 OMO5 享用精緻晨光早餐。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '10:00 - 10:10', title: '出發前往五稜郭公園', desc: '車程 10 分鐘。', location: '五稜郭公園', isKey: false, isZoo: false, expanded: false },
+              { time: '10:10 - 11:15', title: '五稜郭公園', desc: '停留 1 小時。漫步護城河畔賞紅葉，可登塔俯瞰星形城堡。', location: '五稜郭公園', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10034.html', note: '未買展望塔門票，JPY 1,200/ppl。', isKey: true, isZoo: false, expanded: false },
+              { time: '11:15 - 11:30', title: '前往香雪園 (見晴公園)', desc: '車程 15 分鐘。', location: '北海道 函館市 香雪園~春の桜と秋の紅葉の名所', isKey: false, isZoo: false, expanded: false },
+              { time: '11:30 - 12:15', title: '香雪園 (見晴公園)', desc: '停留 45 分鐘。北海道唯一國定文化財庭園，日式庭園楓紅如詩如畫。', location: '北海道 函館市 香雪園~春の桜と秋の紅葉の名所', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10211.html', isKey: true, isZoo: false, expanded: false },
+              { time: '12:15 - 12:30', title: '前往函館市熱帶植物園', desc: '車程 15 分鐘。', location: '函館市熱帶植物園', isKey: false, isZoo: false, expanded: false },
+              { time: '12:30 - 13:15', title: '函館市熱帶植物園', desc: '停留 45 分鐘。園內的猴山全年都有飼養約 90 隻日本獼猴，可以看見牠們在陸地上活動、互動或搶食。未開放猴山溫泉。', location: '函館市熱帶植物園', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10032.html', note: '未買門票，JPY 300/ppl。', isKey: false, isZoo: true, expanded: false },
+              { time: '13:15 - 13:30', title: '前往うにむらかみ 函館駅前店', desc: '車程 15 分鐘。', location: 'うにむらかみ 函館駅前店', isKey: false, isZoo: false, expanded: false },
+              { time: '13:30 - 14:30', title: '【午餐】うにむらかみ 函館駅前店', desc: '享用頂級無添加無礬海膽料理。', location: 'うにむらかみ 函館駅前店', bookingCode: 'Tabelog：TY6R9HVGG4', note: '何小楓，1330，7位', isKey: false, isZoo: false, expanded: false },
+              { time: '14:30 - 14:35', title: '前往金森紅磚倉庫', desc: '車程 5 分鐘。', location: '金森紅磚倉庫', isKey: false, isZoo: false, expanded: false },
+              { time: '14:35 - 15:45', title: '金森紅磚倉庫', desc: '停留 1 小時。漫步懷舊港邊紅磚建築群、挑選伴手禮。', location: '金森紅磚倉庫', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10036.html', isKey: false, isZoo: false, expanded: false },
+              { time: '15:45 - 15:50', title: '前往八幡坂', desc: '車程 5 分鐘。', location: '八幡坂', isKey: false, isZoo: false, expanded: false },
+              { time: '15:50 - 16:00', title: '八幡坂', desc: '打卡拍照：函館最美斜坡，直視港灣海景。', location: '八幡坂', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10089.html', isKey: false, isZoo: false, expanded: false },
+              { time: '16:00 - 17:45', title: '返酒店休息', desc: '車程 10 分鐘，可以返酒店休息一下，準備迎接晚宴與夜景。', location: 'OMO5 函館', isKey: false, isZoo: false, expanded: false },
+              { time: '17:45 - 18:00', title: '前往しゃぶしゃぶ 阿さ利', desc: '車程 10 分鐘。', location: 'しゃぶしゃぶ 阿さ利', isKey: false, isZoo: false, expanded: false },
+              { time: '18:00 - 19:45', title: '【晚餐】しゃぶしゃぶ 阿さ利', desc: '百年老店頂級和牛 ShabuShabu / 壽喜燒，要試試白老牛🐮。', location: 'しゃぶしゃぶ 阿さ利', bookingCode: 'tabelog：PTMP9GYX5N', note: '何小楓，1800，7位', isKey: false, isZoo: false, expanded: false },
+              { time: '19:45 - 20:10', title: '前往函館山', desc: '車程 25 分鐘，💡 司機直接開車登頂，避開纜車排隊人潮與寒風！', location: '函館山展望台', isKey: false, isZoo: false, expanded: false },
+              { time: '20:10 - 21:10', title: '函館山夜景', desc: '停留 1 小時，日本三大夜景之首，俯瞰雙弧形百萬鑽石夜景。', location: '函館山展望台', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10033.html', isKey: false, isZoo: false, expanded: false },
+              { time: '21:10', title: '返酒店休息', desc: '車程 15 分鐘，返酒店休息。', location: 'OMO5 函館', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 3, date: '11/5 (週四)', dateShort: '11/05', title: '國定公園絕景與洞爺', mainTheme: '360度火山湖景展望、秋楓公園漫步、入住湖景溫泉飯店。', hotel: '洞爺乃之風', hotelShort: '洞爺乃之風',
+            items: [
+              { time: '08:00 - 08:45', title: '酒店早餐與退房', desc: '辦理 Check-out，準備行李出發。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '09:00 - 09:45', title: '出發前往大沼國家公園', desc: '車程 45 分鐘。', location: '大沼國定公園', isKey: false, isZoo: false, expanded: false },
+              { time: '09:45 - 10:45', title: '大沼國家公園', desc: '停留 1 小時 。散步路線「大島の路」, 如果有時間，可以行埋「島巡りの路」。欣賞雄偉駒之岳火山倒映在紅葉湖面的倒影。', location: '大沼國定公園', website: 'https://www.bring-you.info/zh-tw/onuma-kokutei-koen', isKey: true, isZoo: false, expanded: false },
+              { time: '10:45 - 11:00', title: '步行前往そば茶屋やま咲', desc: '🚶 5 分鐘。', location: 'そば茶屋やま咲', isKey: false, isZoo: false, expanded: false },
+              { time: '11:00 - 12:00', title: '【午餐】そば茶屋やま咲', desc: '享用道地現做手打蕎麥麵（依現場狀況排隊）。', location: 'そば茶屋やま咲', isKey: false, isZoo: false, expanded: false },
+              { time: '12:00 - 14:00', title: '長途包車前往洞爺湖', desc: '長途車程約 2 小時。沿噴火灣海岸線北上。', location: '浮見堂公園', isKey: false, isZoo: false, expanded: false },
+              { time: '14:00 - 14:45', title: '浮見堂公園', desc: '停留 45 分鐘。拍攝屹立於湖中的朱紅古寺與楓紅交織景色。', location: '浮見堂公園', website: 'https://ir47363.pixnet.net/blog/posts/13358374539', isKey: true, isZoo: false, expanded: false },
+              { time: '14:45 - 15:00', title: '前往 Lake Hill 牧場', desc: '車程 15 分鐘。', location: 'Lake Hill Farm', isKey: false, isZoo: false, expanded: false },
+              { time: '15:00 - 15:15', title: 'Lake Hill 牧場', desc: '停留 15 分鐘。遠眺「蝦夷富士」羊蹄山，品嚐新鮮手工義式冰淇淋。', location: 'Lake Hill Farm', website: 'https://mimigo.tw/lake-hill-farm/', note: '一定要食泡芙 Puff', isKey: false, isZoo: false, expanded: false },
+              { time: '15:15 - 15:30', title: '前往洞爺湖展望台', desc: '車程 15 分鐘。', location: 'サイロ展望台', isKey: false, isZoo: false, expanded: false },
+              { time: '15:30 - 16:00', title: '洞爺湖展望台', desc: '停留 40 分鐘。高處俯瞰整個洞爺湖與中島全景。', location: 'サイロ展望台', website: 'https://toyako.biz/traditional/', isKey: false, isZoo: false, expanded: false },
+              { time: '16:00 - 16:20', title: '前往湖景飯店 洞爺乃之風', desc: '車程 20 分鐘。', location: 'TOYA Nonokaze Resort', isKey: false, isZoo: false, expanded: false },
+              { time: '16:20', title: '入住湖景飯店 洞爺乃之風', desc: '入住全湖景客房。晚餐享用豐盛波浪自助餐 (Buffet)，頂樓無邊際露天風呂。', location: 'TOYA Nonokaze Resort', note: '已預約17:00 自助餐', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 4, date: '11/6 (週五)', dateShort: '11/06', title: '海平線之美與登別地獄谷冒險', mainTheme: '地球岬絕壁海景、海洋公園明星表演大滿貫、地獄谷奇觀與第一瀧本館名湯。', hotel: '登別第一瀧本館', hotelShort: '第一瀧本館',
+            items: [
+              { time: '10:30', title: '酒店出發', desc: '享用乃之風設施、晨湯與早餐後辦理 Check-out。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '10:30 - 11:15', title: '前往室蘭地球岬', desc: '車程 45 分鐘。', location: '地球岬', isKey: false, isZoo: false, expanded: false },
+              { time: '11:15 - 11:50', title: '室蘭地球岬', desc: '停留 35 分鐘。百米絕壁俯瞰太平洋，感受地球海平線弧度。', location: '地球岬', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10019.html', isKey: true, isZoo: false, expanded: false },
+              { time: '11:50 - 12:00', title: '前往肉鍋 乃ざ喜', desc: '車程 10 分鐘。', location: '乃ざ喜', isKey: false, isZoo: false, expanded: false },
+              { time: '12:00 - 13:00', title: '【午晚餐】肉鍋 乃ざ喜', desc: '享用老字號美味肉鍋 / 壽喜燒。', location: '肉鍋 乃ざ喜', bookingCode: '080-4040-0261', note: 'AIKEN， 12:00， 7位', isKey: false, isZoo: false, expanded: false },
+              { time: '13:00 - 13:30', title: '前往登別尼克斯海洋公園', desc: '車程 30 分鐘。', location: '登別尼克斯海洋公園', isKey: false, isZoo: false, expanded: false },
+              { time: '13:30 - 15:45', title: '登別尼克斯海洋公園', desc: '停留 2 小時 15 分鐘。13:45 海豹餵食秀 | 14:15 企鵝大遊行 (必看) | 14:45 海豚表演 | 15:30 海狗表演。', location: '登別尼克斯海洋公園', website: 'https://nixe-aqua.com/', note: '未買入場門票，JPY 3,200/ppl。', isKey: false, isZoo: true, expanded: false },
+              { time: '15:45 - 16:00', title: '前往登別第一瀧本館', desc: '車程 10 分鐘。', location: '登別第一瀧本館', isKey: false, isZoo: false, expanded: false },
+              { time: '16:00', title: '入住登別第一瀧本館', desc: 'Check-in 放入行李，享用全日本最頂級的溫泉名湯。', location: '登別第一瀧本館', isKey: false, isZoo: false, expanded: false },
+              { time: '16:30 - 17:30', title: '登別地獄谷散策', desc: '從飯店後門步行即可抵達地獄谷與紅葉步道（日落可看鬼火之路）。', location: '登別地獄谷', website: 'https://www.bring-you.info/zh-tw/noboribetsu', isKey: true, isZoo: false, expanded: false },
+              { time: '17:30 之後', title: '溫泉與晚宴', desc: '體驗佔地 1,500 坪巨型景觀溫泉大浴場，享用溫泉自助晚餐。', location: '登別第一瀧本館', note: '已預約18:30 自助餐', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 5, date: '11/7 (週六)', dateShort: '11/07', title: '札幌金色銀杏大道與城市紅葉', mainTheme: '登別熊牧場體驗、螃蟹名店午餐、市區紅葉與銀杏巡禮、和牛燒肉晚宴。', hotel: '札幌 La\'gent Stay', hotelShort: 'La\'gent Stay',
+            items: [
+              { time: '10:00', title: '酒店出發', desc: '早餐後辦理 Check-out。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '10:00 - 11:00', title: '登別熊牧場', desc: '停留 1 小時。搭乘纜車上山，親手餵食活潑可愛的北海道棕熊。', location: '登別熊牧場', website: 'https://bearpark.jp/hant/', isKey: false, isZoo: true, expanded: false },
+              { time: '11:00 - 12:30', title: '專車前往札幌市區', desc: '長途車程約 1.5 小時。', location: '札幌市區', isKey: false, isZoo: false, expanded: false },
+              { time: '12:30 - 14:15', title: '【午餐】冰雪之門', desc: '享用老字號頂級螃蟹全席料理。', location: '冰雪之門', bookingCode: 'Driver: 080-4504-0261', note: 'AIKEN， 12:30， 7位', isKey: false, isZoo: false, expanded: false },
+              { time: '14:15 - 14:30', title: '前往北海道神宮', desc: '車程約 15 分鐘。', location: '北海道神宮', isKey: false, isZoo: false, expanded: false },
+              { time: '14:30 - 15:00', title: '北海道神宮', desc: '停留 30 分鐘。參觀北海道總鎮守，漫步於莊嚴且紅葉圍繞的神宮境內。', location: '北海道神宮', website: 'https://mimigo.tw/hokkaido-shrine/', isKey: true, isZoo: false, expanded: false },
+              { time: '15:00 - 15:15', title: '前往北海道大學', desc: '車程約 15 分鐘。', location: '北海道大學 銀杏大道', isKey: false, isZoo: false, expanded: false },
+              { time: '15:15 - 15:45', title: '北海道大學 (銀杏大道)', desc: '停留 30 分鐘。漫步於秋季限定、全北海道最壯麗美麗的金色銀杏隧道。', location: '北海道大學 銀杏大道', website: 'https://hokkaido.letsgojp.com/archives/19536/', isKey: true, isZoo: false, expanded: false },
+              { time: '15:45 - 16:00', title: '前往 The Butter', desc: '車程約 15 分鐘。', location: 'The Butter', isKey: false, isZoo: false, expanded: false },
+              { time: '16:00 - 17:00', title: '【下午茶】The Butter', desc: '享用精緻鬆餅與下午茶甜點，放鬆休息。', location: 'The Butter', note: '必食現做奶油與法式吐司', isKey: false, isZoo: false, expanded: false },
+              { time: '17:00', title: '入住 La\'gent Stay Sapporo Odori', desc: '辦理 Check-in，緊鄰大通公園與狸小路，位置極佳。', location: 'La\'gent Stay Sapporo Odori', isKey: false, isZoo: false, expanded: false },
+              { time: '18:00 - 20:00', title: '【晚餐】SAPPORO NIKUAZABU', desc: '享用精緻高級和牛燒肉料理。', location: 'NIKUAZABU 札幌店', bookingCode: 'tabelog: 7J2FHGUAAE', note: 'HO Siu Fung, 18:00, 7 位， restaurant contact: Whatsapp 81 90-5923-6117', isKey: false, isZoo: false, expanded: false },
+              { time: '20:00 之後', title: '狸小路散策 / 薄野不夜天', desc: '感受 Nikka 威士忌霓虹招牌、體驗「夜間結尾芭菲甜點」或採購藥妝。', location: '狸小路商店街', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 6, date: '11/8 (週日)', dateShort: '11/08', title: '積丹藍絕景與小樽運河夜色', mainTheme: '積丹半島絕壁海景、小樽懷舊運河散策與天狗山夜景。', hotel: '札幌 La\'gent Stay', hotelShort: 'La\'gent Stay',
+            items: [
+              { time: '08:30 - 10:30', title: '酒店出發', desc: '長途車程 2 小時，專車由札幌啟程前往積丹半島。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '10:30 - 11:45', title: '神威岬', desc: '停留 1 小時 15 分鐘。360 度觀賞震撼人心的清澈「積丹藍」大海與奇岩絕景。', location: '神威岬', website: 'https://dribs-drabs.com/cape-kamui/', isKey: true, isZoo: false, expanded: false },
+              { time: '11:45 - 13:00', title: '前往 おたる政寿司 本店', desc: '車程 1 小時 15 分鐘。', location: 'おたる政寿司 本店', isKey: false, isZoo: false, expanded: false },
+              { time: '13:00 - 14:00', title: '【午餐】おたる政寿司 本店', desc: '享用極致新鮮的頂級海膽與美味海鮮丼。', location: 'おたる政寿司 本店', bookingCode: 'tabelog：ZGY9JC3QSY', note: '已預約 JPY 6,820/ppl 12貫握壽司，何小楓， 13:00， 7 位', isKey: false, isZoo: false, expanded: false },
+              { time: '14:00 - 14:10', title: '前往手宮公園', desc: '車程 10 分鐘。', location: '手宮公園', isKey: false, isZoo: false, expanded: false },
+              { time: '14:10 - 15:10', title: '手宮公園', desc: '停留 1 小時。俯瞰港口紅葉。', location: '手宮公園', website: 'https://dribs-drabs.com/temiya-park/', isKey: true, isZoo: false, expanded: false },
+              { time: '15:10 - 15:20', title: '前往小樽運河區', desc: '車程 10 分鐘。', location: '小樽運河', isKey: false, isZoo: false, expanded: false },
+              { time: '15:20 - 16:45', title: '小樽市區漫步', desc: '停留 1 小時 25 分鐘。小樽運河與堺町通 (音樂盒堂、北一硝子館、LeTAO)。', location: '小樽運河', website: 'https://mimigo.tw/otaru/', isKey: true, isZoo: false, expanded: false },
+              { time: '16:45 - 17:00', title: '前往天狗山纜車', desc: '車程 15 分鐘。', location: '天狗山纜車', isKey: false, isZoo: false, expanded: false },
+              { time: '17:00 - 18:15', title: '小樽天狗山夜景', desc: '停留 1 小時 15 分鐘。搭乘纜車直達山頂，俯瞰小樽市區與港灣燈火 (北海道三大夜景)。', location: '天狗山纜車', website: 'https://dribs-drabs.com/mt-tengu/', isKey: true, isZoo: false, expanded: false },
+              { time: '18:15 - 19:30', title: '前往炭や 六根', desc: '車程 1 小時 15 分鐘。', location: '炭や 六根', isKey: false, isZoo: false, expanded: false },
+              { time: '19:30 - 21:00', title: '【晚餐】炭や 六根', desc: '享用炭火燒肉與道地日式料理。', location: '炭や 六根 (札幌)', bookingCode: 'tabelog：SL53NXUK24', note: '何小楓，19:30，7 位', isKey: false, isZoo: false, expanded: false },
+              { time: '21:00 之後', title: '狸小路散策 / 薄野夜生活', desc: '飯後漫步狸小路商店街補貨，或體驗札幌豐富夜生活。', location: '薄野', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 7, date: '11/9 (週一)', dateShort: '11/09', title: '大佛建築與購物狂歡', mainTheme: '參觀安藤忠雄大師建築靈魂、美味拉麵與雞蛋冰淇淋、三井 Outlet 購物血拼。', hotel: 'ESCON Field Hokkaido 站前', hotelShort: 'ESCON 站前',
+            items: [
+              { time: '11:00', title: '酒店出發前往真駒內瀧野靈園', desc: '車程約 30 分鐘。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '11:30 - 13:00', title: '真駒內瀧野靈園 (頭大佛、摩艾石像)', desc: '停留 1 小時 30 分鐘。參觀安藤忠雄大師設計的靈魂建築。', location: '真駒內瀧野靈園', website: 'https://www.bigfang.tw/blog/post/makomanai-takino-cemetery', isKey: true, isZoo: false, expanded: false },
+              { time: '13:00 - 13:15', title: '前往とりたまファーム 拉麵', desc: '車程約 15 分鐘。', location: 'とりたまファーム', isKey: false, isZoo: false, expanded: false },
+              { time: '13:15 - 14:15', title: '【午餐】とりたまファーム 拉麵', desc: '享用美味拉麵午餐。', location: 'とりたまファーム', isKey: false, isZoo: false, expanded: false },
+              { time: '14:15', title: '【甜點】コッコテラス吃蛋冰淇淋', desc: '品嚐香濃地道雞蛋冰淇淋。', location: 'コッコテラス', isKey: false, isZoo: false, expanded: false },
+              { time: '14:30 - 15:00', title: '前往北廣島', desc: '車程約 30 分鐘。', location: '三井 Outlet Park 札幌北廣島', isKey: false, isZoo: false, expanded: false },
+              { time: '15:00 - 20:00', title: '三井 Outlet Park 北廣島', desc: '停留 5 小時。盡情購物血拼，並於 Outlet 享用晚餐。', location: '三井 Outlet Park 札幌北廣島', isKey: false, isZoo: false, expanded: false },
+              { time: '20:00 - 20:15', title: '前往 ESCON Field 北廣島站前', desc: '車程約 15 分鐘。', location: 'ESCON FIELD HOKKAIDO', isKey: false, isZoo: false, expanded: false },
+              { time: '20:30', title: '入住 ESCON Field Hokkaido 站前', desc: '辦理 Check-in 入住休息。', location: 'ESCON FIELD HOKKAIDO', isKey: false, isZoo: false, expanded: false }
+            ]
+          },
+          {
+            dayNum: 8, date: '11/10 (週二)', dateShort: '11/10', title: '最終水族館巡禮與返香港', mainTheme: '千歲鮭魚生態觀賞、最後晨間漫步、機場免稅店衝刺與返程。', hotel: '溫暖的家', hotelShort: '回家',
+            items: [
+              { time: '10:00', title: '酒店 Check-out 出發', desc: '車程約 15 分鐘。', location: '', isKey: false, isZoo: false, expanded: false },
+              { time: '10:15 - 11:00', title: '千歲鮭魚水族館 和 千歲鮭魚公園', desc: '停留 45 分鐘。觀看壯觀的鮭魚生態，並進行最後的晨間漫步。', location: 'サケのふるさと 千歳水族館', isKey: true, isZoo: false, expanded: false },
+              { time: '11:00 - 11:15', title: '前往新千歲機場', desc: '車程約 15 分鐘。', location: '新千歲機場', isKey: false, isZoo: false, expanded: false },
+              { time: '11:15', title: '抵達新千歲機場', desc: '辦理登機手續，在機場免稅店進行最後採買。', location: '新千歲機場國際線', isKey: false, isZoo: false, expanded: false },
+              { time: '16:05 - 20:55', title: '搭機返回香港✈️', desc: '航班 CX581，行程約 5 小時 5 分鐘。平安賦歸，結束精彩旅程！', location: '香港國際機場', isKey: false, isZoo: false, expanded: false }
+            ]
+          }
+        ],
+
+        bookings: [
+          { 
+            id: '1',
+            title: 'うにむらかみ 函館駅前店', 
+            category: '美食預約', 
+            date: '11/04 (週三)', 
+            time: '13:30', 
+            code: 'TY6R9HVGG4', 
+            content: '頂級無添加無礬海膽料理午餐', 
+            location: 'うにむらかみ 函館駅前店', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCC_mB15R88Sp31tmuZFdHBASDhVG6WXxikO0CY5Gg_2LY?e=GVNNpU',
+            notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
+          },
+          { 
+            id: '2',
+            title: 'しゃぶしゃぶ 阿さ利', 
+            category: '美食預約', 
+            date: '11/04 (週三)', 
+            time: '18:00', 
+            code: 'PTMP9GYX5N', 
+            content: '百年老店頂級和牛 ShabuShabu / 壽喜燒', 
+            location: 'しゃぶしゃぶ 阿さ利', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQDHwwPFLsN2R5p0wz5b7jAbARGnI--5CkrZx6G4r8OtxQg?e=2MBmQk',
+            notice: '百年老店熱門預約，建議提前 5 分鐘抵達。'
+          },
+          { 
+            id: '3',
+            title: '肉鍋 乃ざ喜', 
+            category: '美食預約', 
+            date: '11/06 (週五)', 
+            time: '12:00', 
+            code: '080-4040-0261', 
+            content: '老字號美味壽喜燒。', 
+            location: '肉鍋 乃ざ喜', 
+            notice: '司導幫忙預約的，建議提前5分鐘到達'
+          },
+          { 
+            id: '4',
+            title: '冰雪之門 (札幌)', 
+            category: '美食預約', 
+            date: '11/07 (週六)', 
+            time: '12:30', 
+            code: '080-4504-0261', 
+            content: '老字號頂級螃蟹全席料理午餐', 
+            location: '冰雪之門 札幌', 
+            notice: '司導幫忙預約的，建議提前5分鐘到達'
+          },
+          { 
+            id: '5',
+            title: 'SAPPORO NIKUAZABU', 
+            category: '美食預約', 
+            date: '11/07 (週六)', 
+            time: '18:00', 
+            code: '7J2FHGUAAE', 
+            content: '精緻高級和牛燒肉晚宴', 
+            location: 'NIKUAZABU 札幌店', 
+            confirmationUrl: '2026.11.07_1800_Sapporo Nikuazabu.pdf',
+            notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
+          },
+          { 
+            id: '6',
+            title: 'おたる政寿司', 
+            category: '美食預約', 
+            date: '11/08 (週日)', 
+            time: '13:00', 
+            code: 'ZGY9JC3QSY', 
+            content: '日本北海道小樽市最具代表性的老舗壽司店', 
+            location: 'おたる政寿司', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQAwxzKYc9OYTryYByqPwvqvAXvmSO-APXDC9876WmeGVB0?e=DvOQSo',
+            notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
+          },
+          { 
+            id: '7',
+            title: '炭や 六根', 
+            category: '美食預約', 
+            date: '11/08 (週日)', 
+            time: '19:30', 
+            code: 'SL53NXUK24', 
+            content: '炭火燒肉與道地日式料理', 
+            location: '炭や 六根 (札幌)', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCGI_pKcjetSYLF5o88h0vGAdSNb7AJsdzZJLc2k2eVubQ?e=eRIgLW',
+            notice: '透過 Tabelog 預約，請準時抵達，出示預約編號。'
+          }
+        ],
+
+        hotels: [
+          { 
+            id: 'h1',
+            nameZh: 'OMO5 函館 by Hoshino Resorts', 
+            namejp: 'OMO5函館 by 星野リゾート', 
+            nights: '入住 2 晚 (11/03 - 11/05)', 
+            checkIn: '11/03 15:00 之後', 
+            checkOut: '11/05 11:00 前', 
+            address: 'OMO5 函館 by Hoshino Resorts', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQBlfE6VkQvZQbIGRMcowkRlAU6hLAvqJPzCVJ12AV-CP0k?e=eOS3X2',
+            phone: '+81-50-3134-8095', 
+            notes: 'Booked 3 rooms all include Breakfast (Official Website)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Superior Twin Room - 200m2)\n- Room 2 - Ho Yui Man (King Room - 200m2)\n- Room 3 - Ho Siu Fung Jacquelyn (Superior King Room with Sofa Bed - 270m2)'
+          },
+          { 
+            id: 'h2',
+            nameZh: '湖景飯店 洞爺乃之風',
+            namejp: 'ザ レイクビュー TOYA 乃の風リゾート',
+            nights: '入住 1 晚 (11/05 - 11/06)',
+            checkIn: '11/05 15:00 之後',
+            checkOut: '11/06 10:00 前',
+            address: '洞爺乃之風',
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCuIzZ1u8bxSpE5pkoEuwwFAQ_Tof-gB0MnVurSTsrItjs?e=aNwclM',
+            phone: '+81-570-026-571',
+            notes: 'Booked 3 rooms all include Breakfast and Buffet Dinner (Official Website)(Pre-paid)\n- Room 1 - Yui Wah Amy Ho ([Spa Resort Building] 7th floor standard twin room - 36.8m2)\n- Room 2 - Ho Yui Man ([Spa Resort Building] Japanese-Western room - 36.8m2)\n- Room 3 - Yui Kwong Kenny Ho ([Nonokaze Club] Deluxe Japanese-Western room - 56m2)\n- All 3 rooms in different floor'
+          },
+          { 
+            id: 'h3',
+            nameZh: '登別第一瀧本館', 
+            namejp: '登別温泉 第一滝本館', 
+            nights: '入住 1 晚 (11/06 - 11/07)', 
+            checkIn: '11/06 14:00 之後', 
+            checkOut: '11/07 10:00 前', 
+            address: '北海道登別市登別温泉町55', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQB4kGo4DCB7SqsM_gesRwy1ARPJ2ve_WSxhHZ-5-wnHEgE?e=urBJAf',
+            phone: '+81-0143-84-2111', 
+            notes: 'Booked 3 rooms all include Breakfast and Crab Buffet Dinner (Official Website)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Deluxe Japanese-Style Room-Main BLD - 40m2)\n- Room 2 - Ho Yui Man (Deluxe Japanese-Style Room-Main BLD - 40m2)\n- Room 3 - Ho Siu Fung Jacquelyn (Deluxe Japanese-Style Room-Main BLD - 40m2)\n- Confirmed with hotel, all rooms are on the same floor and close to each other'
+          },
+          { 
+            id: 'h4',
+            nameZh: 'La\'gent Stay Sapporo Odori', 
+            namejp: 'ラ・ジェント・ステイ札幌大通', 
+            nights: '入住 2 晚 (11/07 - 11/09)', 
+            checkIn: '11/07 15:00 之後', 
+            checkOut: '11/09 11:00 前', 
+            address: '北海道札幌市中央区南2条西5丁目26-5', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQAFvXy586L9ToBEuDUtzZedAe-grV23uj6kyfEHI-80Lnk?e=WfYU86',
+            phone: '+81-11-200-5507', 
+            notes: 'Booked 3 rooms all include Breakfast (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Superior Twin -23m2)\n- Room 2 - Ho Yui Man (Superior Twin  - 23m2)\n- Room 3 - Ho Yui Kwong Kenny (Superior Twin+Sofa  - 23m2)'
+          },
+          { 
+            id: 'h5',
+            nameZh: 'ESCON Field Hokkaido 站前', 
+            namejp: 'エスコンフィールドHOKKAIDO', 
+            nights: '入住 1 晚 (11/09 - 11/10)', 
+            checkIn: '11/09 15:00 之後', 
+            checkOut: '11/10 10:00 前', 
+            address: '北海道北広島市Fビレッジ', 
+            confirmationUrl: 'https://1drv.ms/b/c/8af4b1999b110a9d/IQCqXTsEhA0uSbukEMgw5xmYAe8xG5JEI9sr-Q38UHg0sUs?e=nkufhA',
+            phone: '+81-11-xxx-xxxx', 
+            notes: 'Booked 3 rooms all include Breakfast (Trip.com)(Pre-paid)\n- Room 1 - Ho Yui Wah Amy (Standard Floor Twin  - 23m2)\n- Room 2 - Tim Kwan Debbie So (Standard Floor Twin  - 23m2)\n- Room 3 - Ho Yui Kwong Kenny (Standard Floor Twin+1 ES CON FIELD View - 23m2)'
+          }
+        ]
+      }
+    }
+  </script>
+</body>
+</html>
