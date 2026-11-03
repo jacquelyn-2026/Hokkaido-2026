@@ -1,4 +1,4 @@
-½<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
@@ -684,7 +684,7 @@
 
         exchangeRate: 20.0,
         members: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
-        expenses: expenses: [
+        expenses: [
           {
             id: 1730620800000,
             date: '2026-11-03',
@@ -700,7 +700,7 @@
             id: 2,
             title: '專車司導接機資訊 🚘',
             date: '2026/11/03',
-            content: '今次北海道包車遊嘅司導係 Ellie，當日會在新千歲機場抵達大堂接我哋，之後全程帶領大家輕鬆遊玩～',
+            content: '今次北海道包車遊嘅司導係 Ellie！當日會在新千歲機場抵達大堂接我哋，之後全程帶領大家輕鬆遊玩～',
             isEditing: false
           },
           {
@@ -742,7 +742,7 @@
               if (data.itinerary) this.itinerary = data.itinerary;
               if (data.bookings) this.bookings = data.bookings;
               if (data.hotels) this.hotels = data.hotels;
-              if (data.expenses) this.expenses = data.expenses;
+              if (data.expenses && data.expenses.length > 0) this.expenses = data.expenses;
               if (data.members) this.members = data.members;
               if (data.exchangeRate) this.exchangeRate = data.exchangeRate;
               if (data.notices) this.notices = data.notices;
@@ -987,7 +987,7 @@
               { time: '09:00 - 09:45', title: '酒店早餐', desc: '於 OMO5 享用精緻晨光早餐。', location: '', isKey: false, isZoo: false, expanded: false },
               { time: '10:00 - 10:10', title: '出發前往五稜郭公園', desc: '車程 10 分鐘。', location: '五稜郭公園', isKey: false, isZoo: false, expanded: false },
               { time: '10:10 - 11:15', title: '五稜郭公園', desc: '停留 1 小時。漫步護城河畔賞紅葉，可登塔俯瞰星形城堡。', location: '五稜郭公園', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10034.html', note: '未買展望塔門票，JPY 1,200/ppl。', isKey: true, isZoo: false, expanded: false },
-              { time: '11:15 - 11:30', title: '前往香雪園 (見晴公園)', desc: '車程 15 分鐘。', location: '北海道 函館市 香雪園~春の桜と秋の紅葉の名所', isKey: false, isZoo: false, expanded: false },
+              { time: '11:15 - 11:30', title: '前往香雪園 (見晴公園)', desc: '車程 15 分鐘。', location: '北海道 函館市 香雪園~春の桜と秋の紅葉的名所', isKey: false, isZoo: false, expanded: false },
               { time: '11:30 - 12:15', title: '香雪園 (見晴公園)', desc: '停留 45 分鐘。北海道唯一國定文化財庭園，日式庭園楓紅如詩如畫。', location: '北海道 函館市 香雪園~春の桜と秋の紅葉的名所', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10211.html', isKey: true, isZoo: false, expanded: false },
               { time: '12:15 - 12:30', title: '前往函館市熱帶植物園', desc: '車程 15 分鐘。', location: '函館市熱帶植物園', isKey: false, isZoo: false, expanded: false },
               { time: '12:30 - 13:15', title: '函館市熱帶植物園', desc: '停留 45 分鐘。園內的猴山全年都有飼養約 90 隻日本獼猴，可以看見牠們在陸地上活動、互動或搶食。未開放猴山溫泉。', location: '函館市熱帶植物園', website: 'https://www.visit-hokkaido.jp/tw/spot/detail_10032.html', note: '未買門票，JPY 300/ppl。', isKey: false, isZoo: true, expanded: false },
@@ -1255,5 +1255,3 @@
   </script>
 </body>
 </html>
-
-```
