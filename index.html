@@ -464,7 +464,7 @@
           </div>
           <div>
             <label class="card-sub text-slate-600 block font-semibold mb-1">成員名單 (用逗號隔開)</label>
-            <input type="text" :value="members.join(', ')" @change="updateMembers($event.target.value)" class="editable-input font-bold text-slate-800" placeholder="Man, Amy, Kenny, Jacquelyn">
+            <input type="text" :value="members.join(', ')" @change="updateMembers($event.target.value)" class="editable-input font-bold text-slate-800" placeholder="Man, Amy, Kenny">
           </div>
         </div>
       </div>
@@ -683,7 +683,7 @@
         textSize: 'large',
 
         exchangeRate: 20.0,
-        members: ['Man', 'Amy', 'Kenny', 'Jacquelyn'],
+        members: ['Man', 'Amy', 'Kenny'],
         expenses: [
           {
             id: 1730620800000,
@@ -743,7 +743,10 @@
               if (data.bookings) this.bookings = data.bookings;
               if (data.hotels) this.hotels = data.hotels;
               if (data.expenses && data.expenses.length > 0) this.expenses = data.expenses;
-              if (data.members) this.members = data.members;
+              if (data.members) {
+                // Remove Jacquelyn if existing in local storage
+                this.members = data.members.filter(m => m !== 'Jacquelyn');
+              }
               if (data.exchangeRate) this.exchangeRate = data.exchangeRate;
               if (data.notices) this.notices = data.notices;
               if (data.textSize) this.textSize = data.textSize;
