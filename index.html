@@ -473,9 +473,9 @@
       <div class="bg-gradient-to-br from-amber-50 to-orange-100/70 rounded-2xl p-4.5 shadow-sm border border-amber-300 space-y-3.5">
         <div class="flex items-center justify-between border-b border-amber-200 pb-2.5">
           <h3 class="font-bold text-amber-950 card-title flex items-center gap-2">
-            <i class="fa-solid fa-scale-balanced text-brand-600 text-lg"></i> AA 制結算清單 (Split-Bill)
+            <i class="fa-solid fa-scale-balanced text-brand-600 text-lg"></i> 精準個人/公款結算清單
           </h3>
-          <span class="card-sub bg-amber-200 text-amber-900 font-bold px-2.5 py-1 rounded-full" x-text="`均攤人頭: ${members.length} 人`"></span>
+          <span class="card-sub bg-amber-200 text-amber-900 font-bold px-2.5 py-1 rounded-full" x-text="`同行: ${members.length} 人`"></span>
         </div>
 
         <div class="grid grid-cols-2 gap-3 card-desc bg-white/80 p-3 rounded-xl border border-amber-200">
@@ -484,19 +484,19 @@
             <span class="font-bold text-brand-700 text-base" x-text="`HKD ${calculateSplitBill().totalHKD.toLocaleString(undefined, {maximumFractionDigits: 1})}`"></span>
           </div>
           <div>
-            <span class="card-sub text-slate-500 block font-medium">每人應付平均 (HKD)</span>
-            <span class="font-bold text-slate-900 text-base" x-text="`HKD ${calculateSplitBill().perPersonHKD.toLocaleString(undefined, {maximumFractionDigits: 1})}`"></span>
+            <span class="card-sub text-slate-500 block font-medium">公款人均 (HKD)</span>
+            <span class="font-bold text-slate-900 text-base" x-text="`HKD ${calculateSplitBill().perPersonSharedHKD.toLocaleString(undefined, {maximumFractionDigits: 1})}`"></span>
           </div>
         </div>
 
         <div class="space-y-2 card-desc">
-          <span class="card-sub text-slate-600 font-bold block">成員支付統計與差額：</span>
+          <span class="card-sub text-slate-600 font-bold block">成員個人應付金額與平帳差額：</span>
           <div class="grid grid-cols-1 gap-2">
             <template x-for="m in members" :key="m">
               <div class="bg-white p-3 rounded-xl border border-orange-200/80 flex items-center justify-between">
                 <div>
                   <span class="font-bold text-slate-900" x-text="m"></span>
-                  <p class="card-sub text-slate-500" x-text="`已付: HKD ${(calculateSplitBill().payerTotals[m] || 0).toLocaleString(undefined, {maximumFractionDigits: 1})}`"></p>
+                  <p class="card-sub text-slate-500" x-text="`已付: HKD ${(calculateSplitBill().payerTotals[m] || 0).toLocaleString(undefined, {maximumFractionDigits: 1})} | 應負擔: HKD ${(calculateSplitBill().memberDues[m] || 0).toLocaleString(undefined, {maximumFractionDigits: 1})}`"></p>
                 </div>
                 <div class="text-right">
                   <template x-if="(calculateSplitBill().balances[m] || 0) > 0">
@@ -576,6 +576,15 @@
                 </template>
               </select>
             </div>
+            <div>
+              <label class="card-sub text-slate-600 block font-semibold mb-1">費用對象 (歸屬)</label>
+              <select x-model="newExpense.chargeTo" class="editable-input font-bold">
+                <option value="ALL">所有人均攤 (Shared Group)</option>
+                <template x-for="m in members" :key="m">
+                  <option :value="m" x-text="`僅算 ${m} 個人 (Personal)`"></option>
+                </template>
+              </select>
+            </div>
           </div>
 
           <button @click="addExpense()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl text-sm transition-colors shadow flex items-center justify-center gap-1.5 mt-1">
@@ -603,7 +612,10 @@
                   <span class="card-sub font-mono font-bold bg-white border border-orange-200 text-slate-700 px-2 py-0.5 rounded-md" x-text="e.date"></span>
                   <h4 class="font-bold card-title text-slate-900" x-text="e.title"></h4>
                 </div>
-                <p class="card-sub text-slate-600 font-medium" x-text="`付款人: ${e.payer}`"></p>
+                <div class="flex items-center gap-2">
+                  <p class="card-sub text-slate-600 font-medium" x-text="`付款人: ${e.payer}`"></p>
+                  <span class="card-sub font-semibold px-2 py-0.5 rounded" :class="e.chargeTo === 'ALL' ? 'bg-amber-100 text-amber-900' : 'bg-sky-100 text-sky-900'" x-text="e.chargeTo === 'ALL' ? '全員均攤' : `歸屬: ${e.chargeTo}`"></span>
+                </div>
               </div>
 
               <div class="flex items-center justify-between sm:justify-end gap-3.5 pt-1.5 sm:pt-0 border-t sm:border-0 border-orange-200">
@@ -691,7 +703,8 @@
             title: '洞爺乃之風 房費 (Kenny) 🏨',
             amount: 3776,
             currency: 'HKD',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Kenny'
           },
           {
             id: 1730793600005,
@@ -699,7 +712,8 @@
             title: '洞爺乃之風 房費 (Amy) 🏨',
             amount: 2555,
             currency: 'HKD',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Amy'
           },
           {
             id: 1730793600004,
@@ -707,7 +721,8 @@
             title: '洞爺乃之風 房費 (Man) 🏨',
             amount: 2555,
             currency: 'HKD',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Man'
           },
           {
             id: 1730793600003,
@@ -715,7 +730,8 @@
             title: 'Lake Hill 牧場 泡芙 🧁',
             amount: 1250,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730793600002,
@@ -723,7 +739,8 @@
             title: 'Lake Hill 牧場 雪糕 🍦',
             amount: 1000,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730793600001,
@@ -731,7 +748,8 @@
             title: '【午晚餐】そば茶屋やま咲 (Soba Noodle) 🍜',
             amount: 8370,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200008,
@@ -739,7 +757,8 @@
             title: '黑芝麻雪糕 (Black Sesame Ice Cream) 🍦',
             amount: 500,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200006,
@@ -747,7 +766,8 @@
             title: '司導加班費 (Driver OT)',
             amount: 5000,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200005,
@@ -755,7 +775,8 @@
             title: '【晚餐】しゃぶしゃぶ 阿さ利 🍲',
             amount: 66750,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200004,
@@ -763,7 +784,8 @@
             title: '金森紅磚倉庫 雪糕 🍦',
             amount: 2700,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200003,
@@ -771,7 +793,8 @@
             title: '【午晚餐】うにむらかみ 函館駅前店 🍱',
             amount: 61600,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200002,
@@ -779,7 +802,8 @@
             title: '函館市熱帶植物園 入場費 🌿',
             amount: 2400,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200001,
@@ -787,7 +811,8 @@
             title: '五稜郭公園 雪糕 🍦',
             amount: 1800,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730707200000,
@@ -795,7 +820,8 @@
             title: '五稜郭公園 入場費',
             amount: 8400,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730620800007,
@@ -803,7 +829,8 @@
             title: 'OMO5 函館 - Triple Room 房費 (Kenny) 🏨',
             amount: 37800,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Kenny'
           },
           {
             id: 1730620800006,
@@ -811,7 +838,8 @@
             title: 'OMO5 函館 - Twin Room 房費 (Amy) 🏨',
             amount: 27200,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Amy'
           },
           {
             id: 1730620800005,
@@ -819,7 +847,8 @@
             title: 'OMO5 函館 - King Room 房費 (Man) 🏨',
             amount: 27200,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'Man'
           },
           {
             id: 1730620800004,
@@ -827,7 +856,8 @@
             title: 'OMO5 輕食/補給 ☕',
             amount: 1960,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730620800003,
@@ -835,7 +865,8 @@
             title: 'Dessert Ice Cream 甜點冰淇淋 🍦',
             amount: 1089,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730620800002,
@@ -843,7 +874,8 @@
             title: '幸運小丑漢堡 🍔',
             amount: 6413,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730620800001,
@@ -851,7 +883,8 @@
             title: 'Corn Soup 粟米湯 🌽',
             amount: 600,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           },
           {
             id: 1730620800000,
@@ -859,7 +892,8 @@
             title: 'Lawson 輕食/補給品',
             amount: 3962,
             currency: 'JPY',
-            payer: 'Kenny'
+            payer: 'Kenny',
+            chargeTo: 'ALL'
           }
         ],
 
@@ -885,7 +919,8 @@
           title: '',
           amount: null,
           currency: 'JPY',
-          payer: 'Man'
+          payer: 'Man',
+          chargeTo: 'ALL'
         },
 
         toggleTextSize() {
@@ -944,26 +979,42 @@
         calculateSplitBill() {
           const rate = this.exchangeRate > 0 ? this.exchangeRate : 20.0;
           let totalHKD = 0;
+          let sharedHKD = 0;
           const payerTotals = {};
+          const memberDues = {};
 
-          this.members.forEach(m => payerTotals[m] = 0);
+          this.members.forEach(m => {
+            payerTotals[m] = 0;
+            memberDues[m] = 0;
+          });
 
           this.expenses.forEach(e => {
             const amountInHKD = e.currency === 'JPY' ? (e.amount / rate) : e.amount;
             totalHKD += amountInHKD;
+            
+            // Record Payer Total
             if (payerTotals[e.payer] !== undefined) {
               payerTotals[e.payer] += amountInHKD;
             } else {
               payerTotals[e.payer] = amountInHKD;
             }
+
+            // Distribute Charge To Specific Member or Group
+            const chargeToTarget = e.chargeTo || 'ALL';
+            if (chargeToTarget === 'ALL') {
+              sharedHKD += amountInHKD;
+            } else if (memberDues[chargeToTarget] !== undefined) {
+              memberDues[chargeToTarget] += amountInHKD;
+            }
           });
 
           const numMembers = this.members.length || 1;
-          const perPersonHKD = totalHKD / numMembers;
-          const balances = {};
+          const perPersonSharedHKD = sharedHKD / numMembers;
 
+          const balances = {};
           this.members.forEach(m => {
-            balances[m] = (payerTotals[m] || 0) - perPersonHKD;
+            memberDues[m] += perPersonSharedHKD;
+            balances[m] = (payerTotals[m] || 0) - memberDues[m];
           });
 
           const debtors = [];
@@ -998,8 +1049,10 @@
 
           return {
             totalHKD,
-            perPersonHKD,
+            sharedHKD,
+            perPersonSharedHKD,
             payerTotals,
+            memberDues,
             balances,
             settlements
           };
@@ -1120,7 +1173,8 @@
             title: this.newExpense.title,
             amount: parseFloat(this.newExpense.amount),
             currency: this.newExpense.currency,
-            payer: this.newExpense.payer
+            payer: this.newExpense.payer,
+            chargeTo: this.newExpense.chargeTo || 'ALL'
           };
           this.expenses.unshift(expenseObj);
           this.newExpense.title = '';
